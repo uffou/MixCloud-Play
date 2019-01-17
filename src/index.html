@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>MixCloud Play</title>
+	<link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+</head>
+<body>
+	<div id="dragger"></div>
+	<webview
+		id="webview"
+		disablewebsecurity
+		preload="./preload.js"
+		src="https://www.mixcloud.com"
+		webpreferences="experimentalFeatures"
+	></webview>
+	<script src="renderer.js"></script>
+</body>
+</html>
