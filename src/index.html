@@ -9,10 +9,11 @@
 	<div id="dragger"></div>
 	<webview
 		id="webview"
+		allowpopups
 		disablewebsecurity
 		preload="./preload.js"
 		src="https://www.mixcloud.com"
-		webpreferences="experimentalFeatures"
+		webpreferences="nativeWindowOpen=true;experimentalFeatures"
 	></webview>
 	<script src="renderer.js"></script>
 </body>

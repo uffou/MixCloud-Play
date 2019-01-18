@@ -1,11 +1,48 @@
 const path = require(`path`);
 
-const { ipcRenderer, webFrame, remote } = require(`electron`);
+const { ipcRenderer, webFrame, remote, shell } = require(`electron`);
 const ConfigStore = require(`electron-store`);
 
-const SoundValues = require(`./@enum/SoundValues`);
 
-const configStoreDefaults = require(`./@util/configStoreDefaults`);
+// Analytics 
+const STORAGE_TRACKING_ID_KEY = 'analyticsTrackingId'
+
+const GoogleAnalytics = require('@codemotion/electron-google-analytics').default
+const analytics = new GoogleAnalytics('UA-132743364-1')
+
+const clientID = (function () {
+	let id = localStorage.getItem(STORAGE_TRACKING_ID_KEY)
+
+	if (!id) {
+		id = require('uuid/v4')()
+		localStorage.setItem(STORAGE_TRACKING_ID_KEY, id)
+	}
+
+	return id
+}())
+
+
+
+// Open all links in external browser
+document.addEventListener('click', function (event) {
+	if(event.target.href){
+		console.log(event.target.href)
+		analytics.pageview(
+			'http://app',
+			// eslint-disable-next-line no-magic-numbers
+			event.target.href,
+			document.title,
+			clientID,
+		)
+	}
+	if (event.target.tagName === 'A' && event.target.href.startsWith('http') &&
+	!event.target.href.includes('https://www.mixcloud.com/')
+	) {
+		event.preventDefault()
+		shell.openExternal(event.target.href)
+	}
+})
+
 
 // #region Custom styles
 const style = document.createElement('style');
@@ -188,40 +225,7 @@ window.Notification = NotificationDecorated;
 // #region Custom notification sound
 webFrame.registerURLSchemeAsBypassingCSP('file');
 
-const configStore = new ConfigStore({defaults: configStoreDefaults});
+const configStore = new ConfigStore();
 const AudioOriginal = Audio;
 const beaconNotificationRegex = /beacon-notification\.(?:.*)$/;
-function changeSound(){
-	window.Audio = AudioOriginal;
-	const soundValue = configStore.get('soundValue');
-	const soundExtension = configStore.get('soundExtension');
-	const lastSoundFileId = configStore.get('lastSoundFileId');
 
-	switch(soundValue){
-		case SoundValues.OPERATING_SYSTEM:
-		case SoundValues.NO_SOUND:
-			window.Audio = function(filePath){
-				if(beaconNotificationRegex.test(filePath)){
-					return {play(){}};
-				}
-
-				return new AudioOriginal(filePath);
-			}
-			break;
-		case SoundValues.FILE:
-			const appDataPath = remote.app.getPath('userData');
-			const destinationPath = path.join(appDataPath, 'soundFiles', `${lastSoundFileId}${soundExtension}`)
-			const notificationSound = new AudioOriginal(`file://${destinationPath}`);
-			window.Audio = function(filePath){
-				if(beaconNotificationRegex.test(filePath)){
-					return notificationSound;
-				}
-
-				return new AudioOriginal(filePath);
-			}
-			break;
-	}
-}
-ipcRenderer.on('updatedSound', changeSound);
-changeSound();
-// #endregion

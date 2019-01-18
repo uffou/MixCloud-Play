@@ -43,14 +43,6 @@ module.exports = [{
 	plugins: [
 		new CopyPlugin([
 			{
-				from: './src/@enum/SoundValues.js',
-				to: '@enum/SoundValues.js'
-			},
-			{
-				from: './src/@util/configStoreDefaults.js',
-				to: '@util/configStoreDefaults.js'
-			},
-			{
 				from: './src/img/',
 				to: 'img/'
 			},

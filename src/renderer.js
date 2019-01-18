@@ -21,7 +21,6 @@ function didFinishLoad(){
 }
 webview.addEventListener('did-finish-load', didFinishLoad)
 
-
 webview.addEventListener('page-title-updated', ({title}) => {
 	document.title = `${title} | MixCloud Play`;
 });
@@ -42,8 +41,8 @@ ipcRenderer.on('reload', () => {
 	webview.reload();
 })
 
-ipcRenderer.on('updatedSound', () => {
-	webview.send('updatedSound');
+ipcRenderer.on('updatedPreferences', () => {
+	webview.send('updatedPreferences');
 })
 
 ipcRenderer.on('notificationClicked', (_, notificationIndex) => {
@@ -58,3 +57,4 @@ ipcRenderer.on('playPause', () => {
 ipcRenderer.on('next', () => {
 	webview.send('next');
 })
+

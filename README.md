@@ -2,7 +2,7 @@ MixCloud Play
 =====
 MixCloud Play is the missing desktop experience for MixCloud.com with support for media controls and showing current track in menu bar. Enjoy listening your favorite music for hours...
 
-## [Download for Mac](https://github.com/uffou/MixCloud-Play/releases/download/v0.9/MixCloud-Play.app.zip)
+## [Download for Mac](https://github.com/uffou/MixCloud-Play/releases/download/v0.9.1/MixCloud-Play.app.zip)
 
 ![screenshot](https://raw.githubusercontent.com/uffou/MixCloud-Play/master/Screenshot.png)
 

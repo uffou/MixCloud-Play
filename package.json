@@ -1,6 +1,6 @@
 {
   "name": "MixCloud-Play",
-  "version": "0.0.1",
+  "version": "0.9.1",
   "description": "The desktop client MixCloud",
   "author": {
     "name": "Codemotion Ltd."
@@ -17,7 +17,7 @@
       "build"
     ],
     "appId": "com.codemotionapps.mixcloud",
-    "copyright": "Copyright © 2018 Codemotion Ltd.",
+    "copyright": "Copyright © 2019 Codemotion Ltd.",
     "productName": "MixCloud Play",
     "mac": {
       "icon": "MixCloud.icns",
@@ -48,6 +48,7 @@
     "webpack-cli": "^3.1.0"
   },
   "dependencies": {
+    "@codemotion/electron-google-analytics": "^0.0.1",
     "electron-context-menu": "0.10.0",
     "electron-store": "2.0.0"
   }

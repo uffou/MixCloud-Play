@@ -8,13 +8,10 @@ const {
 	Menu,
 	Notification,
 	Tray,
+	shell,
 } = require(`electron`);
 const contextMenu = require('electron-context-menu');
 const ConfigStore = require(`electron-store`);
-
-const SoundValues = require(`./@enum/SoundValues`);
-
-const configStoreDefaults = require(`./@util/configStoreDefaults`);
 
 const menuTemplate = require(`./menu`);
 
@@ -64,6 +61,15 @@ function closeHandler(event){
 
 	mainWindow.hide();
 }
+
+app.on('web-contents-created', (event, contents) => {
+	if (contents.getType() === 'webview') {
+	  contents.on('new-window', (event, url) => {
+		shell.openExternal(url)
+		event.preventDefault()
+	  })
+	}
+})
 
 app.on('ready', () => {
 	createTray();
@@ -136,7 +142,7 @@ app.on('before-quit', () => {
 	mainWindow && mainWindow.removeListener('close', closeHandler);
 });
 
-const configStore = new ConfigStore({defaults: configStoreDefaults});
+const configStore = new ConfigStore();
 ipcMain.on('notification', (_event, notificationIndex, subtitle) => {
 	if(mainWindow.isFocused()) return;
 
@@ -145,7 +151,7 @@ ipcMain.on('notification', (_event, notificationIndex, subtitle) => {
 	const notification = new Notification({
 		title: 'MixCloud Play',
 		subtitle,
-		silent: configStore.get('soundValue') !== SoundValues.OPERATING_SYSTEM
+		silent: true
 	});
 	notification.on('click', () => {
 		mainWindow.webContents.send('notificationClicked', notificationIndex);
@@ -164,7 +170,7 @@ ipcMain.on('handlePause', (_,track) => {
 	const notification = new Notification({
 		title: 'Mix Paused',
 		subtitle: track,
-		silent: configStore.get('soundValue') !== SoundValues.OPERATING_SYSTEM
+		silent: true
 	});
 	notification.on('click', () => {
 		mainWindow.webContents.send('notificationClicked', notificationIndex);
@@ -188,7 +194,7 @@ ipcMain.on('handlePlay', (_,track) => {
 	const notification = new Notification({
 		title: 'Playing...',
 		subtitle: track,
-		silent: configStore.get('soundValue') !== SoundValues.OPERATING_SYSTEM
+		silent: true
 	});
 	notification.on('click', () => {
 		mainWindow.webContents.send('notificationClicked', notificationIndex);
@@ -200,6 +206,6 @@ ipcMain.on('handlePlay', (_,track) => {
 	}, 7000);
 });
 
-ipcMain.on('updatedSound', () => {
-	mainWindow.webContents.send('updatedSound');
+ipcMain.on('updatedPreferences', () => {
+	mainWindow.webContents.send('updatedPreferences');
 })

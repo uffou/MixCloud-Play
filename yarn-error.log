@@ -64,6 +64,7 @@ npm manifest:
       "webpack-cli": "^3.1.0"
     },
     "dependencies": {
+      "@codemotion/electron-google-analytics": "^0.0.1",
       "electron-context-menu": "0.10.0",
       "electron-store": "2.0.0"
     }
@@ -690,6 +691,13 @@ Lockfile:
       esutils "^2.0.2"
       lodash "^4.17.10"
       to-fast-properties "^2.0.0"
+  
+  "@codemotion/electron-google-analytics@^0.0.1":
+    version "0.0.1"
+    resolved "https://npm.codemotionapps.com/@codemotion%2felectron-google-analytics/-/electron-google-analytics-0.0.1.tgz#1978181d3a582fa264dc47005ecdee3d81ef3eeb"
+    dependencies:
+      request "^2.83.0"
+      uuid "^3.1.0"
   
   "@types/node@^8.0.24":
     version "8.10.27"
@@ -3910,7 +3918,7 @@ Lockfile:
     dependencies:
       is-finite "^1.0.0"
   
-  request@^2.45.0:
+  request@^2.45.0, request@^2.83.0:
     version "2.88.0"
     resolved "https://registry.npmjs.org/request/-/request-2.88.0.tgz#9c2fca4f7d35b592efe57c7f0a55e81052124fef"
     dependencies:
@@ -4656,7 +4664,7 @@ Lockfile:
     dependencies:
       inherits "2.0.3"
   
-  uuid@^3.3.2:
+  uuid@^3.1.0, uuid@^3.3.2:
     version "3.3.2"
     resolved "https://registry.npmjs.org/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
   
