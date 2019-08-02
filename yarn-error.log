@@ -1,22 +1,35 @@
 Arguments: 
-  /usr/local/bin/node /usr/local/Cellar/yarn/1.5.1_1/libexec/bin/yarn.js dist
+  /usr/local/bin/node /usr/local/Cellar/yarn/1.12.3/libexec/bin/yarn.js install
 
 PATH: 
-  /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+  /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/mmelnic/Library/Android/sdk/tools:/Users/mmelnic/Library/Android/sdk/platform-tools
 
 Yarn version: 
-  1.5.1
+  1.12.3
 
 Node version: 
-  10.0.0
+  10.12.0
 
 Platform: 
   darwin x64
 
+Trace: 
+  Error: https://registry.yarnpkg.com/@vacu%2felectron-google-analytics: Not found
+      at Request.params.callback [as _callback] (/usr/local/Cellar/yarn/1.12.3/libexec/lib/cli.js:65894:18)
+      at Request.self.callback (/usr/local/Cellar/yarn/1.12.3/libexec/lib/cli.js:129018:22)
+      at Request.emit (events.js:182:13)
+      at Request.<anonymous> (/usr/local/Cellar/yarn/1.12.3/libexec/lib/cli.js:129990:10)
+      at Request.emit (events.js:182:13)
+      at IncomingMessage.<anonymous> (/usr/local/Cellar/yarn/1.12.3/libexec/lib/cli.js:129912:12)
+      at Object.onceWrapper (events.js:273:13)
+      at IncomingMessage.emit (events.js:187:15)
+      at endReadableNT (_stream_readable.js:1094:12)
+      at process._tickCallback (internal/process/next_tick.js:63:19)
+
 npm manifest: 
   {
     "name": "MixCloud-Play",
-    "version": "0.0.1",
+    "version": "0.9.1",
     "description": "The desktop client MixCloud",
     "author": {
       "name": "Codemotion Ltd."
@@ -33,7 +46,7 @@ npm manifest:
         "build"
       ],
       "appId": "com.codemotionapps.mixcloud",
-      "copyright": "Copyright © 2018 Codemotion Ltd.",
+      "copyright": "Copyright © 2019 Codemotion Ltd.",
       "productName": "MixCloud Play",
       "mac": {
         "icon": "MixCloud.icns",
@@ -64,7 +77,7 @@ npm manifest:
       "webpack-cli": "^3.1.0"
     },
     "dependencies": {
-      "@codemotion/electron-google-analytics": "^0.0.1",
+      "@vacu/electron-google-analytics": "^0.1.0",
       "electron-context-menu": "0.10.0",
       "electron-store": "2.0.0"
     }
@@ -691,13 +704,6 @@ Lockfile:
       esutils "^2.0.2"
       lodash "^4.17.10"
       to-fast-properties "^2.0.0"
-  
-  "@codemotion/electron-google-analytics@^0.0.1":
-    version "0.0.1"
-    resolved "https://npm.codemotionapps.com/@codemotion%2felectron-google-analytics/-/electron-google-analytics-0.0.1.tgz#1978181d3a582fa264dc47005ecdee3d81ef3eeb"
-    dependencies:
-      request "^2.83.0"
-      uuid "^3.1.0"
   
   "@types/node@^8.0.24":
     version "8.10.27"
@@ -3918,7 +3924,7 @@ Lockfile:
     dependencies:
       is-finite "^1.0.0"
   
-  request@^2.45.0, request@^2.83.0:
+  request@^2.45.0:
     version "2.88.0"
     resolved "https://registry.npmjs.org/request/-/request-2.88.0.tgz#9c2fca4f7d35b592efe57c7f0a55e81052124fef"
     dependencies:
@@ -4664,7 +4670,7 @@ Lockfile:
     dependencies:
       inherits "2.0.3"
   
-  uuid@^3.1.0, uuid@^3.3.2:
+  uuid@^3.3.2:
     version "3.3.2"
     resolved "https://registry.npmjs.org/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
   
@@ -4875,18 +4881,3 @@ Lockfile:
     resolved "https://registry.npmjs.org/yauzl/-/yauzl-2.4.1.tgz#9528f442dab1b2284e58b4379bb194e22e0c4005"
     dependencies:
       fd-slicer "~1.0.1"
-
-Trace: 
-  Error: Command failed.
-  Exit code: 1
-  Command: sh
-  Arguments: -c yarn build && build -m
-  Directory: /Users/uffo/Repos/MixCloud
-  Output:
-  
-      at ProcessTermError.MessageError (/usr/local/Cellar/yarn/1.5.1_1/libexec/lib/cli.js:186:110)
-      at new ProcessTermError (/usr/local/Cellar/yarn/1.5.1_1/libexec/lib/cli.js:226:113)
-      at ChildProcess.<anonymous> (/usr/local/Cellar/yarn/1.5.1_1/libexec/lib/cli.js:30281:17)
-      at ChildProcess.emit (events.js:182:13)
-      at maybeClose (internal/child_process.js:947:16)
-      at Process.ChildProcess._handle.onexit (internal/child_process.js:236:5)

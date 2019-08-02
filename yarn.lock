@@ -618,7 +618,8 @@
 
 "@codemotion/electron-google-analytics@^0.0.1":
   version "0.0.1"
-  resolved "https://npm.codemotionapps.com/@codemotion%2felectron-google-analytics/-/electron-google-analytics-0.0.1.tgz#1978181d3a582fa264dc47005ecdee3d81ef3eeb"
+  resolved "https://registry.yarnpkg.com/@codemotion/electron-google-analytics/-/electron-google-analytics-0.0.1.tgz#1978181d3a582fa264dc47005ecdee3d81ef3eeb"
+  integrity sha512-FqnIHbm4IUDzbRd12fkGDTi8bbQ97OIL9TvLMPNEnBUFL0Dhyiq/kWktO9ElMbfFCjdw4vKfK0dPvIB5aKLceQ==
   dependencies:
     request "^2.83.0"
     uuid "^3.1.0"
@@ -3844,7 +3845,8 @@ repeating@^2.0.0:
 
 request@^2.45.0, request@^2.83.0:
   version "2.88.0"
-  resolved "https://registry.npmjs.org/request/-/request-2.88.0.tgz#9c2fca4f7d35b592efe57c7f0a55e81052124fef"
+  resolved "https://registry.yarnpkg.com/request/-/request-2.88.0.tgz#9c2fca4f7d35b592efe57c7f0a55e81052124fef"
+  integrity sha512-NAqBSrijGLZdM0WZNsInLJpkJokL72XYjUpnB0iwsRgxh7dB6COrHnTBNwN0E+lHDAJzu7kLAkDeY08z2/A0hg==
   dependencies:
     aws-sign2 "~0.7.0"
     aws4 "^1.8.0"

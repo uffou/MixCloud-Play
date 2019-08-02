@@ -190,11 +190,25 @@ ipcRenderer.on('init', () => {
 		let track = document.getElementsByClassName('player-current-audio')[0].innerText
 		if(currentTrack !== track){
 			currentTrack = String(track)
-			console.log(currentTrack)
 			let trackTruncated = String(track)
-			if(trackTruncated.includes('  — Buy')) trackTruncated = trackTruncated.replace('  — Buy','')
-			if(trackTruncated.includes('by')) trackTruncated = trackTruncated.replace('by',' by')
-			ipcRenderer.send('nowPlaying', trackTruncated)
+
+			if(trackTruncated.includes('  — Buy')) {
+				trackTruncated = trackTruncated.replace('  — Buy', '')
+			}
+
+			let notificationTitle
+			let notificationSubtitle
+
+			if(trackTruncated.includes('by')) {
+				notificationTitle = trackTruncated.slice(trackTruncated.search('by') + 3, trackTruncated.length)
+				notificationSubtitle = trackTruncated.slice(0, trackTruncated.search('by'));
+				trackTruncated = trackTruncated.replace('by', ' by')
+			} else {
+				notificationTitle = title
+				notificationSubtitle = trackTruncated
+			}
+
+			ipcRenderer.send('nowPlaying', trackTruncated, notificationTitle, notificationSubtitle)
 		}
 	},2000)
 })
