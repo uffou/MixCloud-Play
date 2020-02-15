@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  mixcloud-play:
+    image: electronuserland/builder:latest
+    volumes:
+      - .:/usr/src/app
+    working_dir: /usr/src/app

@@ -3,37 +3,10 @@ const path = require(`path`);
 const { ipcRenderer, webFrame, remote, shell } = require(`electron`);
 const ConfigStore = require(`electron-store`);
 
-
-// Analytics 
-const STORAGE_TRACKING_ID_KEY = 'analyticsTrackingId'
-
-const GoogleAnalytics = require('@codemotion/electron-google-analytics').default
-const analytics = new GoogleAnalytics('UA-132743364-1')
-
-const clientID = (function () {
-	let id = localStorage.getItem(STORAGE_TRACKING_ID_KEY)
-
-	if (!id) {
-		id = require('uuid/v4')()
-		localStorage.setItem(STORAGE_TRACKING_ID_KEY, id)
-	}
-
-	return id
-}())
-
-
-
 // Open all links in external browser
 document.addEventListener('click', function (event) {
-	if(event.target.href){
+	if (event.target.href) {
 		console.log(event.target.href)
-		analytics.pageview(
-			'http://app',
-			// eslint-disable-next-line no-magic-numbers
-			event.target.href,
-			document.title,
-			clientID,
-		)
 	}
 	if (event.target.tagName === 'A' && event.target.href.startsWith('http') &&
 	!event.target.href.includes('https://www.mixcloud.com/')
@@ -42,7 +15,6 @@ document.addEventListener('click', function (event) {
 		shell.openExternal(event.target.href)
 	}
 })
-
 
 // #region Custom styles
 const style = document.createElement('style');

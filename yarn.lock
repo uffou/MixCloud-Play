@@ -616,14 +616,6 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
-"@codemotion/electron-google-analytics@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@codemotion/electron-google-analytics/-/electron-google-analytics-0.0.1.tgz#1978181d3a582fa264dc47005ecdee3d81ef3eeb"
-  integrity sha512-FqnIHbm4IUDzbRd12fkGDTi8bbQ97OIL9TvLMPNEnBUFL0Dhyiq/kWktO9ElMbfFCjdw4vKfK0dPvIB5aKLceQ==
-  dependencies:
-    request "^2.83.0"
-    uuid "^3.1.0"
-
 "@types/node@^8.0.24":
   version "8.10.27"
   resolved "https://registry.npmjs.org/@types/node/-/node-8.10.27.tgz#667d03fcd44d8683de5459b8ecd80506eee65f0e"
@@ -3843,7 +3835,7 @@ repeating@^2.0.0:
   dependencies:
     is-finite "^1.0.0"
 
-request@^2.45.0, request@^2.83.0:
+request@^2.45.0:
   version "2.88.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.88.0.tgz#9c2fca4f7d35b592efe57c7f0a55e81052124fef"
   integrity sha512-NAqBSrijGLZdM0WZNsInLJpkJokL72XYjUpnB0iwsRgxh7dB6COrHnTBNwN0E+lHDAJzu7kLAkDeY08z2/A0hg==
@@ -4590,7 +4582,7 @@ util@^0.10.3:
   dependencies:
     inherits "2.0.3"
 
-uuid@^3.1.0, uuid@^3.3.2:
+uuid@^3.3.2:
   version "3.3.2"
   resolved "https://registry.npmjs.org/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
 
