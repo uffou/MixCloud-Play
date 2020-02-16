@@ -19,17 +19,16 @@ document.addEventListener('click', function (event) {
 // #region Custom styles
 const style = document.createElement('style');
 style.innerText = `
-	.header{
+	.header {
 		-webkit-app-region: drag;
 	}
-	.ad-header-container{
-		display: none;
+	.ad-header-container {
+		display: none; /* also done with the tempKillAd function */
 	}
-	.header .logo{
+	.header-logo-container {
 		margin-left: 36px;
 	}
-
-	.container-wide .sidebar-small nav{
+	.container-wide .sidebar-small nav {
 		margin-left: 36px;
 		-webkit-app-region: drag;
 	}
@@ -54,11 +53,17 @@ pusher.className = 'headerPusher';
 const secondHeader = document.createElement('div');
 secondHeader.id = 'secondHeader';
 
+const tempKillAdvert = () => {
+	// Remove massive Ads. Ads are cool - I get their commercial purpose - but this huge Ad is just ridiculous
+	document.getElementsByClassName('ad-header-wrapper')[0].innerHTML = '';
+}
+
 let bodyObserver;
 const bodyObserverCallback = createObserverCallback('BODY', () => {
-	const header = document.getElementById('header');
-	header.parentNode.insertBefore(secondHeader, header);
-	header.parentNode.insertBefore(pusher, header.nextSibling);
+	const header = document.getElementsByClassName('header')[0];
+
+	tempKillAdvert();
+
 	console.log('change')
 	bodyObserver.disconnect();
 })
@@ -73,6 +78,7 @@ headObserver = new MutationObserver(headObserverCallback)
 
 let documentObserver;
 const documentObserverCallback = createObserverCallback('HTML', () => {
+	tempKillAdvert()
 	headObserver.observe(document.documentElement, mutationObserverConfig)
 	bodyObserver.observe(document.documentElement, mutationObserverConfig)
 	documentObserver.disconnect();
@@ -89,7 +95,7 @@ function NotificationDecorated(title){
 		_handleClick: [],
 		close(){},
 		addEventListener(type, callback){
-			if(type !== `click`) return;
+			if(type !== 'click') return;
 
 			this._handleClick.push(callback);
 		},
@@ -105,7 +111,6 @@ function NotificationDecorated(title){
 }
 
 //Elements
-
 document.addEventListener('click', function(event) {
 	const playPause = document.getElementsByClassName('player-control')[0]
 	const eventPath = event.path || (event.composedPath && event.composedPath()) || []
@@ -120,7 +125,7 @@ document.addEventListener('click', function(event) {
 		console.log(track)
 		ipcRenderer.send(paused ? 'handlePause' : 'handlePlay', track);
 	}
-	// console.log(pause,play)
+	console.log(pause,play)
 });
 
 ipcRenderer.on('notificationClicked', (_, notificationIndex) => {
@@ -129,7 +134,7 @@ ipcRenderer.on('notificationClicked', (_, notificationIndex) => {
 		window.location = url;
 	}
 	notifications[notificationIndex].click();
-	// window.open = originalOpen;
+	window.open = originalOpen;
 })
 
 ipcRenderer.on('playPause', () => {
@@ -149,7 +154,9 @@ ipcRenderer.on('next', () => {
 ipcRenderer.on('init', () => {
 	let nowPlaying = ''
 	let currentTrack = ''
-	setInterval(()=>{
+	setInterval(() => {
+
+		console.log('Count',nowPlaying)
 		const elements = document.getElementsByClassName('player-cloudcast-title')
 		if(!elements && !elements.length) return
 		const title = elements[0].innerText;
@@ -184,8 +191,6 @@ ipcRenderer.on('init', () => {
 		}
 	},2000)
 })
-
-
 
 Object.defineProperties(NotificationDecorated, {
 	permission: {

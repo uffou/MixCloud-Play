@@ -1,7 +1,15 @@
 {
 	"name": "mixcloud-play",
-	"version": "0.9.3",
-	"description": "The desktop client MixCloud",
+	"version": "0.9.4",
+	"description": "The MixCloud desktop client",
+	"keywords": [
+		"music",
+		"osx",
+		"macOS",
+		"mixcloud",
+		"wrapper",
+		"media keys"
+	],
 	"author": {
 		"name": "Codemotion Ltd."
 	},
@@ -16,6 +24,9 @@
 	"repository": {
 		"type": "git",
 		"url": "git@github.com:uffou/MixCloud-Play.git"
+	},
+	"bugs": {
+		"url": "https://github.com/uffou/MixCloud-Play/issues"
 	},
 	"license": "UNLICENSED",
 	"scripts": {
@@ -48,16 +59,11 @@
 		"@babel/plugin-proposal-decorators": "^7.0.0-rc.3",
 		"@babel/plugin-proposal-function-bind": "^7.0.0-rc.3",
 		"@babel/preset-env": "^7.0.0-rc.3",
-		"@babel/preset-react": "^7.0.0-rc.3",
 		"babel-loader": "^8.0.0-beta.6",
 		"copy-webpack-plugin": "^4.5.2",
 		"electron": "2.0.8",
 		"electron-builder": "20.28.2",
 		"electron-ipc-log": "^3.0.1",
-		"mobx": "5.0.5",
-		"mobx-react": "5.2.5",
-		"react": "16.4.2",
-		"react-dom": "16.4.2",
 		"rimraf": "^2.6.2",
 		"webpack": "^4.17.1",
 		"webpack-cli": "^3.1.0"

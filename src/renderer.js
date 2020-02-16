@@ -41,20 +41,14 @@ ipcRenderer.on('reload', () => {
 	webview.reload();
 })
 
-ipcRenderer.on('updatedPreferences', () => {
-	webview.send('updatedPreferences');
-})
-
 ipcRenderer.on('notificationClicked', (_, notificationIndex) => {
 	webview.send('notificationClicked', notificationIndex);
 })
 
 // MIXCLOUD
-
 ipcRenderer.on('playPause', () => {
 	webview.send('playPause');
 })
 ipcRenderer.on('next', () => {
 	webview.send('next');
 })
-

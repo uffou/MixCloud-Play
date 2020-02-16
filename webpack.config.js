@@ -4,12 +4,12 @@ const { version: electronVersion } = require(`electron/package.json`);
 const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = [{
-	entry: './src/preferences/renderer',
-	devtool: 'source-map',
+	entry: './src/blank.js',
 	output: {
-		path: path.join(__dirname, 'build', 'preferences'),
-		filename: 'renderer.js'
+		path: path.join(__dirname, 'build'),
+		filename: 'blank.js'
 	},
+	devtool: 'source-map',
 	module: {
 		rules: [
 			{
@@ -21,8 +21,7 @@ module.exports = [{
 						presets: [
 							['@babel/preset-env', {
 								targets: {electron: electronVersion}
-							}],
-							'@babel/preset-react'
+							}]
 						],
 						plugins: [
 							["@babel/plugin-proposal-decorators", { legacy: true }],
@@ -33,12 +32,6 @@ module.exports = [{
 				}
 			}
 		]
-	}
-}, {
-	entry: './src/blank.js',
-	output: {
-		path: path.join(__dirname, 'build'),
-		filename: 'blank.js'
 	},
 	plugins: [
 		new CopyPlugin([
@@ -46,16 +39,12 @@ module.exports = [{
 				from: './src/img/',
 				to: 'img/'
 			},
-			{
-				from: './src/preferences/index.html',
-				to: 'preferences/index.html'
-			},
-			{ from: './src/main.css' },
-			{ from: './src/index.html' },
-			{ from: './src/main.js' },
-			{ from: './src/menu.js' },
 			{ from: './src/preload.js' },
 			{ from: './src/renderer.js' },
+			{ from: './src/main.js' },
+			{ from: './src/main.css' },
+			{ from: './src/menu.js' },
+			{ from: './src/index.html' },
 		])
 	]
 }]

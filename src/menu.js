@@ -1,8 +1,3 @@
-const preferencesItem = {
-	label: 'Preferences...',
-	accelerator: 'Command+,'
-};
-
 const dashboardItem = {
 	label: 'Dashboard'
 };
@@ -15,8 +10,6 @@ const template = [
 				label: 'About MixCloud Play',
 				role: 'about'
 			},
-			{ type: 'separator' },
-			preferencesItem,
 			{ type: 'separator' },
 			{
 				role: 'services',
@@ -40,9 +33,7 @@ const template = [
 			}
 		]
 	},
-	{
-		role: 'editMenu'
-	},
+	{ role: 'editMenu' },
 	{
 		label: 'View',
 		submenu: [
@@ -86,28 +77,14 @@ const template = [
 	{
 		role: 'window',
         submenu: [
-			{
-				role: 'close'
-			},
-			{
-				role: 'minimize'
-			},
-			{
-				role: 'zoom'
-			},
-			{
-				type: 'separator'
-			},
-			{
-				role: 'front'
-			}
+			{ role: 'close' },
+			{ role: 'minimize' },
+			{ role: 'zoom' },
+			{ type: 'separator' },
+			{ role: 'front' }
 		]
 	}
 ];
-
-template.setPreferencesClickHandler = (handler) => {
-	preferencesItem.click = handler;
-}
 
 template.setDashboardClickHandler = (handler) => {
 	dashboardItem.click = handler;

@@ -15,27 +15,8 @@ const ConfigStore = require(`electron-store`);
 
 const menuTemplate = require(`./menu`);
 
-var preferencesWindow;
-
-function openPreferences() {
-    preferencesWindow = new BrowserWindow({
-        width: 400,
-		height: 400,
-		title: 'Preferences'
-	})
-	contextMenu({ window: preferencesWindow });
-
-    preferencesWindow.loadURL(`file://${__dirname}/preferences/index.html`)
-
-	preferencesWindow.on('close', () => {
-		preferencesWindow = undefined;
-	});
-
-	//preferencesWindow.webContents.openDevTools();
-}
-
 let mainWindow;
-let tray
+let tray;
 
 const toggleWindow = () => {
     if (mainWindow.isVisible()) {
@@ -55,11 +36,10 @@ const createTray = () => {
     });
 };
 
-menuTemplate.setPreferencesClickHandler(openPreferences);
 menuTemplate.setDashboardClickHandler(() => {
     mainWindow.webContents.send('goToDashboard');
 })
-const menu = Menu.buildFromTemplate(menuTemplate)
+const menu = Menu.buildFromTemplate(menuTemplate);
 
 function closeHandler(event) {
     event.preventDefault();
@@ -68,29 +48,34 @@ function closeHandler(event) {
 }
 
 app.on('web-contents-created', (event, contents) => {
-    if (contents.getType() === 'webview') {
-        contents.on('new-window', (event, url) => {
-            shell.openExternal(url)
-            event.preventDefault()
-        })
-    }
-})
+	if (contents.getType() === 'webview') {
+		contents.on('new-window', (event, url) => {
+			shell.openExternal(url)
+			event.preventDefault()
+		});
+	}
+});
 
 app.on('ready', () => {
     createTray();
     Menu.setApplicationMenu(menu);
 
     mainWindow = new BrowserWindow({
-        titleBarStyle: 'hiddenInset',
+		titleBarStyle: 'hiddenInset',
         width: 1100,
         minWidth: 768,
         height: 800,
-        minHeight: 400,
+		minHeight: 400,
+		webPreferences: {
+            // preload: 'preload.js', //
+			nodeIntegration: true //TODO turn this off
+		}
     });
 
-    mainWindow.webContents.loadFile(path.join(__dirname, 'index.html'))
+	mainWindow.loadFile(path.join(__dirname, 'index.html'));
+    //mainWindow.loadURL(path.join('file://', __dirname, '/index.html'))
 
-    // mainWindow.webContents.openDevTools();
+    //mainWindow.openDevTools();
 
     mainWindow.on('focus', () => {
         // app.dock.setBadge("");
@@ -140,7 +125,7 @@ app.on('ready', () => {
 });
 
 app.on('activate', () => {
-    !preferencesWindow && mainWindow && mainWindow.show();
+    mainWindow && mainWindow.show();
 });
 
 app.on('before-quit', () => {
@@ -158,8 +143,9 @@ ipcMain.on('notification', (_event, notificationIndex, subtitle) => {
         subtitle,
         silent: true
     });
-    notification.on('click', () => {
-        mainWindow.webContents.send('notificationClicked', notificationIndex);
+    notification.on('click', (e) => {
+		console.log('notificationClicked - click', e);
+        mainWindow.webContents.send('notificationClicked', e);
         mainWindow.show();
     });
     notification.show();
@@ -177,8 +163,9 @@ ipcMain.on('handlePause', (_, track) => {
         subtitle: track,
         silent: true
     });
-    notification.on('click', () => {
-        mainWindow.webContents.send('notificationClicked', notificationIndex);
+	notification.on('click', (e) => {
+		console.log('notificationClicked - pause', e);
+        mainWindow.webContents.send('notificationClicked', e);
         mainWindow.show();
     });
     notification.show();
@@ -197,8 +184,9 @@ ipcMain.on('nowPlaying', (_, nowPlaying, title, subtitle) => {
         subtitle: subtitle,
         silent: true
     });
-    notification.on('click', () => {
-        mainWindow.webContents.send('notificationClicked', notificationIndex);
+    notification.on('click', (e) => {
+		console.log('notificationClicked - nowPlaying', e);
+        mainWindow.webContents.send('notificationClicked', e);
         mainWindow.show();
     });
     notification.show();
@@ -216,8 +204,9 @@ ipcMain.on('handlePlay', (_, track) => {
         subtitle: track,
         silent: true
     });
-    notification.on('click', () => {
-        mainWindow.webContents.send('notificationClicked', notificationIndex);
+    notification.on('click', (e) => {
+		console.log('notificationClicked - handlePlay', e);
+        mainWindow.webContents.send('notificationClicked', e);
         mainWindow.show();
     });
     notification.show();
@@ -225,7 +214,3 @@ ipcMain.on('handlePlay', (_, track) => {
         notification.close();
     }, 7000);
 });
-
-ipcMain.on('updatedPreferences', () => {
-    mainWindow.webContents.send('updatedPreferences');
-})
