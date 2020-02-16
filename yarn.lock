@@ -1689,10 +1689,6 @@ electron-download@^3.0.1:
     semver "^5.3.0"
     sumchecker "^1.2.0"
 
-electron-ipc-log@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.npmjs.org/electron-ipc-log/-/electron-ipc-log-3.0.1.tgz#4d97594f99f7bcdbe7ac4230bd20a1cc8121ff92"
-
 electron-is-dev@^0.3.0:
   version "0.3.0"
   resolved "https://registry.npmjs.org/electron-is-dev/-/electron-is-dev-0.3.0.tgz#14e6fda5c68e9e4ecbeff9ccf037cbd7c05c5afe"

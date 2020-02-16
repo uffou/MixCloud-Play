@@ -1,6 +1,6 @@
 {
 	"name": "mixcloud-play",
-	"version": "0.9.4",
+	"version": "0.9.6",
 	"description": "The MixCloud desktop client",
 	"keywords": [
 		"music",
@@ -63,7 +63,6 @@
 		"copy-webpack-plugin": "^4.5.2",
 		"electron": "2.0.8",
 		"electron-builder": "20.28.2",
-		"electron-ipc-log": "^3.0.1",
 		"rimraf": "^2.6.2",
 		"webpack": "^4.17.1",
 		"webpack-cli": "^3.1.0"

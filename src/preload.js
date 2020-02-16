@@ -47,11 +47,6 @@ function createObserverCallback(tagName, callback){
 	}
 }
 
-const pusher = document.createElement('div');
-pusher.className = 'headerPusher';
-const secondHeader = document.createElement('div');
-secondHeader.id = 'secondHeader';
-
 const tempKillAdvert = () => {
 	// Remove massive Ads. Ads are cool - I get their commercial purpose - but this huge Ad is just ridiculous
 	document.getElementsByClassName('ad-header-wrapper')[0].innerHTML = '';
@@ -59,7 +54,6 @@ const tempKillAdvert = () => {
 
 let bodyObserver;
 const bodyObserverCallback = createObserverCallback('BODY', () => {
-	const header = document.getElementsByClassName('header')[0];
 
 	tempKillAdvert();
 
