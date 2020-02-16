@@ -8,26 +8,30 @@ const {
     Menu,
     Notification,
     Tray,
-    shell,
+    shell
 } = require(`electron`);
 const contextMenu = require('electron-context-menu');
 const ConfigStore = require(`electron-store`);
 
 const menuTemplate = require(`./menu`);
 
-let preferencesWindow;
+var preferencesWindow;
 
 function openPreferences() {
     preferencesWindow = new BrowserWindow({
         width: 400,
-        height: 400,
-    });
-    contextMenu({window: preferencesWindow})
-    preferencesWindow.webContents.loadFile(path.join(__dirname, 'preferences', 'index.html'))
+		height: 400,
+		title: 'Preferences'
+	})
+	contextMenu({ window: preferencesWindow });
 
-    preferencesWindow.on('close', () => {
-        preferencesWindow = undefined;
-    })
+    preferencesWindow.loadURL(`file://${__dirname}/preferences/index.html`)
+
+	preferencesWindow.on('close', () => {
+		preferencesWindow = undefined;
+	});
+
+	//preferencesWindow.webContents.openDevTools();
 }
 
 let mainWindow;

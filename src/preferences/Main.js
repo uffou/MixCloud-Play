@@ -15,7 +15,7 @@ const settingsStore = require(`./SettingsStore`);
 				<tr>
 					<td>Notification sound:</td>
 					<td>
-						<select value={soundValue} onChange={settingsStore.onChangeShowTitle}>
+						<select onChange={settingsStore.onChangeShowTitle}>
 							<option value={'show'}>Show song title in menu bar</option>
 							<option value={'hide'}>Don't show song title in menu bar</option>
 						</select>
