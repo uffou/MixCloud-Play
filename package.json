@@ -69,7 +69,6 @@
 		"webpack-cli": "^3.1.0"
 	},
 	"dependencies": {
-		"electron-context-menu": "0.10.0",
-		"electron-store": "2.0.0"
+		"electron-context-menu": "0.10.0"
 	}
 }

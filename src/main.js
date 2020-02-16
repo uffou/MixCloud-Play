@@ -11,7 +11,6 @@ const {
     shell
 } = require(`electron`);
 const contextMenu = require('electron-context-menu');
-const ConfigStore = require(`electron-store`);
 
 const menuTemplate = require(`./menu`);
 
@@ -132,7 +131,6 @@ app.on('before-quit', () => {
     mainWindow && mainWindow.removeListener('close', closeHandler);
 });
 
-const configStore = new ConfigStore();
 ipcMain.on('notification', (_event, notificationIndex, subtitle) => {
     if (mainWindow.isFocused()) return;
 

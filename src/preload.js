@@ -1,7 +1,6 @@
 const path = require(`path`);
 
 const { ipcRenderer, webFrame, remote, shell } = require(`electron`);
-const ConfigStore = require(`electron-store`);
 
 // Open all links in external browser
 document.addEventListener('click', function (event) {
@@ -216,7 +215,5 @@ window.Notification = NotificationDecorated;
 // #region Custom notification sound
 webFrame.registerURLSchemeAsBypassingCSP('file');
 
-const configStore = new ConfigStore();
 const AudioOriginal = Audio;
 const beaconNotificationRegex = /beacon-notification\.(?:.*)$/;
-
