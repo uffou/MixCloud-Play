@@ -1,8 +1,8 @@
 MixCloud Play
 =====
-MixCloud Play is the missing desktop experience for [MixCloud.com](https://www.mixcloud.com) with support for media controls and showing current track in menu bar. Enjoy listening new music for hours...
+MixCloud Play is the missing desktop experience for [MixCloud.com](https://www.mixcloud.com) with support for media controls and showing current track in menu bar. Enjoy listening to new music for hours...
 
-## [Download for Mac](https://github.com/uffou/MixCloud-Play/releases/download/v0.9.1/MixCloud.Play.app.zip)
+## [Download for Mac](https://github.com/mountainash/MixCloud-Play/releases/download/v0.9.7/MixCloud.Play.app.zip)
 
 ![screenshot](https://raw.githubusercontent.com/uffou/MixCloud-Play/master/Screenshot.png)
 
@@ -31,4 +31,4 @@ yarn pack
 docker-compose build
 docker-compose run --rm mixcloud-play
 ```
-Built app will output to ./dist/mac/MixCloud Play.app
+Built app will output to `./dist/mac/MixCloud Play.app`
