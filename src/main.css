@@ -3,10 +3,12 @@ body {
 	margin: 0;
 	padding: 0;
 	height: 100%;
+	background: #333;
 }
 webview {
 	width: 100%;
 	height: 100%;
+	background: #FFF;
 }
 #dragger {
 	height: 54px;
@@ -16,4 +18,40 @@ webview {
 	width: 100%;
 	-webkit-app-region: drag;
 	pointer-events: none;
+}
+#hud {
+	padding: 0;
+	background: rgba(100, 100, 100, .5);
+	text-align: right;
+}
+#hud p {
+	padding: 0;
+	display: inline;
+}
+#controls {
+	padding: 0;
+	margin: 5px 0 0 10px;
+}
+#controls a {
+	display: inline-block;
+	/* width: 20px;
+	height: 20px; */
+	margin: 0;
+	padding: 5px;
+	/* overflow: hidden; */
+	/* border: 3px solid #333;
+	border-radius: 20px;
+	background: #FFF;
+	box-shadow: 0 2px 4px #333; */
+	text-decoration: none;
+	color: #333;
+	line-height: 1;
+	opacity: .6;
+	cursor: pointer;
+}
+#controls a:hover {
+	opacity: .9;
+}
+#info {
+	display: none;
 }

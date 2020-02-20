@@ -1,15 +1,14 @@
 const path = require(`path`);
 
-const { ipcRenderer, webFrame, remote, shell } = require(`electron`);
+const { ipcRenderer, webFrame, shell } = require(`electron`);
 
 // Open all links in external browser
-document.addEventListener('click', function (event) {
+document.addEventListener('click', function(event) {
 	if (event.target.href) {
 		console.log(event.target.href)
 	}
 	if (event.target.tagName === 'A' && event.target.href.startsWith('http') &&
-	!event.target.href.includes('https://www.mixcloud.com/')
-	) {
+	!event.target.href.includes('https://www.mixcloud.com/')) {
 		event.preventDefault()
 		shell.openExternal(event.target.href)
 	}

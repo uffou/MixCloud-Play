@@ -1,6 +1,9 @@
 const { ipcRenderer } = require('electron');
 const contextMenu = require('electron-context-menu');
 
+// const logger = require('electron').remote.require('./logger');
+// logger.log('Woohoo!');
+
 const BASE_URL = 'https://www.mixcloud.com';
 function concatEndpoints(endpoints){
 	for(const i in endpoints){
@@ -50,5 +53,24 @@ ipcRenderer.on('playPause', () => {
 	webview.send('playPause');
 })
 ipcRenderer.on('next', () => {
+	webview.send('next');
+})
+
+// HUD
+const HUDplay = document.getElementById('play'),
+	HUDpause = document.getElementById('pause'),
+	HUDprev = document.getElementById('prev'),
+	HUDnext = document.getElementById('next'),
+	HUDname = document.getElementById('name'),
+	HUDlink = document.getElementById('link');
+
+HUDplay.addEventListener('click', () => {
+	// logger.log('webviewsend: playPause');
+	console.log('webviewsend: playPause')
+	webview.send('playPause');
+})
+HUDnext.addEventListener('click', () => {
+	// logger.log('webviewsend: next');
+	console.log('webviewsend: next')
 	webview.send('next');
 })
