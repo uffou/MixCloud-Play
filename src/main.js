@@ -40,11 +40,11 @@ menuTemplate.setDashboardClickHandler(() => {
 })
 const menu = Menu.buildFromTemplate(menuTemplate);
 
-function closeHandler(event) {
-    event.preventDefault();
+// function closeHandler(event) {
+//     event.preventDefault();
 
-    mainWindow.hide();
-}
+//     mainWindow.hide();
+// }
 
 app.on('web-contents-created', (event, contents) => {
 	if (contents.getType() === 'webview') {
@@ -74,13 +74,13 @@ app.on('ready', () => {
 	mainWindow.loadFile(path.join(__dirname, 'index.html'));
     //mainWindow.loadURL(path.join('file://', __dirname, '/index.html'))
 
-    //mainWindow.openDevTools();
+    mainWindow.openDevTools();
 
-    mainWindow.on('focus', () => {
-        // app.dock.setBadge("");
-    });
+    // mainWindow.on('focus', () => {
+    //     // app.dock.setBadge("");
+    // });
 
-    mainWindow.on('close', closeHandler)
+    // mainWindow.on('close', closeHandler)
 
     // Load our media keys
     // Copied from https://gist.github.com/twolfson/0a03820e27583cc9ad6e
@@ -127,9 +127,9 @@ app.on('activate', () => {
     mainWindow && mainWindow.show();
 });
 
-app.on('before-quit', () => {
-    mainWindow && mainWindow.removeListener('close', closeHandler);
-});
+// app.on('before-quit', () => {
+//     mainWindow && mainWindow.removeListener('close', closeHandler);
+// });
 
 ipcMain.on('notification', (_event, notificationIndex, subtitle) => {
     if (mainWindow.isFocused()) return;
