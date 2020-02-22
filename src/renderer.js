@@ -1,12 +1,11 @@
 const { ipcRenderer } = require('electron');
-const contextMenu = require('electron-context-menu');
 
 // const logger = require('electron').remote.require('./logger');
 // logger.log('Woohoo!');
 
 const BASE_URL = 'https://www.mixcloud.com';
-function concatEndpoints(endpoints){
-	for(const i in endpoints){
+function concatEndpoints(endpoints) {
+	for (const i in endpoints) {
 		endpoints[i] = BASE_URL + endpoints[i];
 	}
 
@@ -14,11 +13,11 @@ function concatEndpoints(endpoints){
 }
 const Endpoints = concatEndpoints({
 	DASHBOARD: '/'
-})
+});
 
 const webview = document.getElementById('webview');
-function didFinishLoad(){
-	contextMenu({window: webview})
+
+function didFinishLoad() {
 	webview.removeEventListener('did-finish-load', didFinishLoad)
 	webview.send('init');
 }

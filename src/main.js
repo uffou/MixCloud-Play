@@ -1,4 +1,4 @@
-const path = require(`path`);
+const path = require('path');
 
 const {
     app,
@@ -9,36 +9,53 @@ const {
     Notification,
     Tray,
     shell
-} = require(`electron`);
-const contextMenu = require('electron-context-menu');
+} = require('electron');
 
-const menuTemplate = require(`./menu`);
-
-let mainWindow;
-let tray;
+var mainWindow = null;
+var tray = null;
+var contextMenu = null;
+var _isPlaying = false;
 
 const toggleWindow = () => {
-    if (mainWindow.isVisible()) {
-        mainWindow.hide();
-    } else {
-        mainWindow.show();
-        mainWindow.focus();
-    }
+	mainWindow.show();
+	mainWindow.focus();
 };
 
-const createTray = () => {
-    tray = new Tray(path.join(__dirname, './img/logoTemplate.png'));
-    tray.on('right-click', toggleWindow);
-    tray.on('double-click', toggleWindow);
-    tray.on('click', (event) => {
-        toggleWindow();
-    });
+async function initTray() {
+	if (!tray) {
+		tray = new Tray(path.join(__dirname, './img/logoTemplate.png'));
+		tray.on('click', togglePlay);
+		tray.on('right-click', displayContextMenu);
+		tray.on('double-click', toggleWindow);
+	}
+
+	contextMenu = Menu.buildFromTemplate([
+		{
+			label: 'Play',
+			checked: togglePlay(),
+			click: () => { togglePlay() }
+		},
+		// { label: 'Open website', click: () => { shell.openExternal( {Playing track's URL}) } },
+		{ type: 'separator' },
+		{ label: 'Give feedback', click: () => { shell.openExternal('https://github.com/uffou/MixCloud-Play/issues') } },
+		{ label: 'Quit', click: () => { app.quit() } }
+	]);
 };
 
-menuTemplate.setDashboardClickHandler(() => {
-    mainWindow.webContents.send('goToDashboard');
-})
-const menu = Menu.buildFromTemplate(menuTemplate);
+function displayContextMenu() {
+	tray.popUpContextMenu(contextMenu);
+}
+
+function togglePlay() {
+	_isPlaying = !_isPlaying;
+	console.log('Toggle Play:', _isPlaying);
+	return _isPlaying;
+}
+
+// menuTemplate.setDashboardClickHandler(() => {
+//     mainWindow.webContents.send('goToDashboard');
+// })
+// const menu = Menu.buildFromTemplate(menuTemplate);
 
 // function closeHandler(event) {
 //     event.preventDefault();
@@ -56,8 +73,8 @@ app.on('web-contents-created', (event, contents) => {
 });
 
 app.on('ready', () => {
-    createTray();
-    Menu.setApplicationMenu(menu);
+	initTray();
+    // Menu.setApplicationMenu(menu);
 
     mainWindow = new BrowserWindow({
 		titleBarStyle: 'hiddenInset',
