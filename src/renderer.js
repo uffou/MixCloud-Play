@@ -56,20 +56,26 @@ ipcRenderer.on('next', () => {
 })
 
 // HUD
-const HUDplay = document.getElementById('play'),
+const HUDcontrols = document.getElementById('controls'),
+	HUDplay = document.getElementById('play'),
 	HUDpause = document.getElementById('pause'),
 	HUDprev = document.getElementById('prev'),
 	HUDnext = document.getElementById('next'),
-	HUDname = document.getElementById('name'),
-	HUDlink = document.getElementById('link');
+	HUDinfo = document.getElementById('info'),
+	HUDtitle = document.getElementById('title'),
+	HUDartist = document.getElementById('artist'),
+	HUDurl = document.getElementById('url');
 
-HUDplay.addEventListener('click', () => {
+HUDplay.addEventListener('click', (e) => {
+	e.preventDefault();
+	HUDcontrols.className = (HUDcontrols.className == 'play') ? '' : 'play';
 	// logger.log('webviewsend: playPause');
 	console.log('webviewsend: playPause')
 	webview.send('playPause');
-})
-HUDnext.addEventListener('click', () => {
+});
+HUDnext.addEventListener('click', (e) => {
+	e.preventDefault();
 	// logger.log('webviewsend: next');
 	console.log('webviewsend: next')
 	webview.send('next');
-})
+});

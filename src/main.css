@@ -1,3 +1,6 @@
+::selection {
+	background-color: transparent;
+}
 html,
 body {
 	margin: 0;
@@ -20,24 +23,52 @@ webview {
 	pointer-events: none;
 }
 #hud {
-	padding: 0;
+    display: grid;
+    grid-gap: 10px;
+	grid-template-columns: auto 100px;
+	margin: 0;
+	padding: 5px 0;
 	background: rgba(100, 100, 100, .5);
 	text-align: right;
+	transition: background .5s;
+}
+#hud:hover {
+	background: rgba(100, 100, 100, .75);
 }
 #hud p {
+	margin: 0;
 	padding: 0;
-	display: inline;
+}
+#info {
+	display: none;
+	grid-column: 1 / 2;
+	grid-row: 1;
+	font-size: x-small;
+	font-family: -apple-system, BlinkMacSystemFont, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+#info .label {
+	display: none;
+}
+#info #title {
+	font-weight: bold;
+}
+#info #link {
+	opacity: .75
 }
 #controls {
+	grid-column: 2;
+	grid-row: 1 / 2;
 	padding: 0;
-	margin: 5px 0 0 10px;
+}
+#controls p {
+	display: inline;
 }
 #controls a {
 	display: inline-block;
 	/* width: 20px;
 	height: 20px; */
 	margin: 0;
-	padding: 5px;
+	padding: 5px 2px 0 0;
 	/* overflow: hidden; */
 	/* border: 3px solid #333;
 	border-radius: 20px;
@@ -52,6 +83,15 @@ webview {
 #controls a:hover {
 	opacity: .9;
 }
-#info {
+#controls #play {
+	display: none;
+}
+#controls #pause {
+	display: inline-block;
+}
+#controls.play #play {
+	display: inline-block;
+}
+#controls.play #pause {
 	display: none;
 }
