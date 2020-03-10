@@ -25,8 +25,18 @@
 		disablewebsecurity
 		preload="./preload.js"
 		src="https://www.mixcloud.com"
+		partition="persist:mixcloud"
 		webpreferences="nativeWindowOpen=true;experimentalFeatures"
 	></webview>
+	<!-- <script>
+		const webview = document.querySelector('webview')
+webview.addEventListener('dom-ready', () => {
+  webview.openDevTools()
+});
+webview.addEventListener('console-message', (e) => {
+  console.log('Guest page logged a message:', e.message)
+})
+	</script> -->
 	<script src="renderer.js"></script>
 </body>
 </html>
