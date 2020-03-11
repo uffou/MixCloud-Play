@@ -1,7 +1,7 @@
 {
 	"name": "mixcloud-play",
 	"version": "0.9.10",
-	"description": "The MixCloud desktop client",
+	"description": "The Mixcloud desktop client",
 	"keywords": [
 		"music",
 		"osx",
@@ -44,9 +44,9 @@
 		],
 		"appId": "com.codemotionapps.mixcloud",
 		"copyright": "Copyright © 2019 Codemotion Ltd.",
-		"productName": "MixCloud Play",
+		"productName": "Mixcloud Play",
 		"mac": {
-			"icon": "MixCloud.icns",
+			"icon": "Mixcloud.icns",
 			"target": [
 				"dmg"
 			]

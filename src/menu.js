@@ -4,10 +4,10 @@ const dashboardItem = {
 
 const template = [
 	{
-		label: 'MixCloud Play',
+		label: 'Mixcloud Play',
 		submenu: [
 			{
-				label: 'About MixCloud Play',
+				label: 'About Mixcloud Play',
 				role: 'about'
 			},
 			{ type: 'separator' },
@@ -17,7 +17,7 @@ const template = [
 			},
 			{ type: 'separator' },
 			{
-				label: 'Hide MixCloud Play',
+				label: 'Hide Mixcloud Play',
 				role: 'hide'
 			},
 			{
@@ -28,7 +28,7 @@ const template = [
 			{ role: 'unhide' },
 			{ type: 'separator' },
 			{
-				label: 'Quit MixCloud Play',
+				label: 'Quit Mixcloud Play',
 				role: 'quit'
 			}
 		]

@@ -14,24 +14,6 @@ document.addEventListener('click', function(event) {
 	}
 })
 
-// #region Custom styles
-const style = document.createElement('style');
-style.innerText = `
-	.header {
-		-webkit-app-region: drag;
-	}
-	.ad-header-container {
-		display: none; /* also done with the tempKillAd function */
-	}
-	.header-logo-container {
-		margin-left: 36px;
-	}
-	.container-wide .sidebar-small nav {
-		margin-left: 36px;
-		-webkit-app-region: drag;
-	}
-`;
-
 const mutationObserverConfig = { childList: true };
 
 function createObserverCallback(tagName, callback){
@@ -46,16 +28,8 @@ function createObserverCallback(tagName, callback){
 	}
 }
 
-const tempKillAdvert = () => {
-	// Remove massive Ads. Ads are cool - I get their commercial purpose - but this huge Ad is just ridiculous
-	document.getElementsByClassName('ad-header-wrapper')[0].innerHTML = '';
-}
-
 let bodyObserver;
 const bodyObserverCallback = createObserverCallback('BODY', () => {
-
-	tempKillAdvert();
-
 	console.log('change')
 	bodyObserver.disconnect();
 })
@@ -63,14 +37,12 @@ bodyObserver = new MutationObserver(bodyObserverCallback)
 
 let headObserver;
 const headObserverCallback = createObserverCallback('HEAD', () => {
-	document.head.appendChild(style);
 	headObserver.disconnect();
 })
 headObserver = new MutationObserver(headObserverCallback)
 
 let documentObserver;
 const documentObserverCallback = createObserverCallback('HTML', () => {
-	tempKillAdvert()
 	headObserver.observe(document.documentElement, mutationObserverConfig)
 	bodyObserver.observe(document.documentElement, mutationObserverConfig)
 	documentObserver.disconnect();
@@ -82,17 +54,17 @@ documentObserver.observe(document, mutationObserverConfig)
 // #region Notification
 const notifications = [];
 const NotificationOriginal = Notification;
-function NotificationDecorated(title){
+function NotificationDecorated(title) {
 	const notification = {
 		_handleClick: [],
-		close(){},
-		addEventListener(type, callback){
+		close() {},
+		addEventListener(type, callback) {
 			if(type !== 'click') return;
 
 			this._handleClick.push(callback);
 		},
-		click(){
-			for(const callback of this._handleClick){
+		click() {
+			for(const callback of this._handleClick) {
 				callback.call(this);
 			}
 		}
@@ -104,16 +76,16 @@ function NotificationDecorated(title){
 
 //Elements
 document.addEventListener('click', function(event) {
-	const playPause = document.getElementsByClassName('player-control')[0]
+	const playPause = document.querySelector('[class*=PlayButton__PlayerControl]')
 	const eventPath = event.path || (event.composedPath && event.composedPath()) || []
 	const playPauseClicked = eventPath.find(path => path === playPause)
-	if(playPauseClicked){
+	if (playPauseClicked) {
 		console.log(playPauseClicked)
-		const paused = playPauseClicked.classList.contains('pause-state')
+		const paused = playPauseClicked.classList.contains('dvjoTG')
 		console.log(paused)
-		let track = document.getElementsByClassName('player-current-audio')[0].innerText
-		if(track.includes('  — Buy')) track = track.replace('  — Buy','')
-		if(track.includes('by')) track = track.replace('by',' by')
+		let trackElement = document.querySelector('[class*=RebrandPlayerControls__ShowTitle]')
+		if (!trackElement) return
+		let track = trackElement.innerText
 		console.log(track)
 		ipcRenderer.send(paused ? 'handlePause' : 'handlePlay', track);
 	}
@@ -130,58 +102,55 @@ ipcRenderer.on('notificationClicked', (_, notificationIndex) => {
 })
 
 ipcRenderer.on('playPause', () => {
-	const playPause = document.getElementsByClassName('player-control')[0]
-	console.log('in here')
-	playPause.click()
+	const playPause = document.querySelector('[class*=PlayButton__PlayerControl]')
+	console.log('playPause')
+	if (playPause)
+		playPause.click()
 })
 
 ipcRenderer.on('next', () => {
+	// TODO
 	const row = Array.from(document.getElementsByClassName('cloudcast-upnext-row'))
 	const nowPlaying = row.findIndex(song => song.classList.contains('now-playing'))
 	const children = Array.from(row[nowPlaying + 1].childNodes)
 	const image = children.find(child => child.classList.contains('cloudcast-row-image'))
-	image.click()
+	if (image)
+		image.click()
 })
 
 ipcRenderer.on('init', () => {
-	let nowPlaying = ''
+	let currentArtist = ''
 	let currentTrack = ''
+
 	setInterval(() => {
+		console.log('currentTrack', currentTrack, 'currentArtist', currentArtist)
 
-		console.log('Count',nowPlaying)
-		const elements = document.getElementsByClassName('player-cloudcast-title')
-		if(!elements && !elements.length) return
-		const title = elements[0].innerText;
-		if(title !== nowPlaying){
-			nowPlaying = String(title)
-			console.log(nowPlaying)
-			ipcRenderer.send('handlePlay', nowPlaying)
+		const titleElement = document.querySelector('[class*=RebrandPlayerSliderComponent__Artist]')
+		if (!titleElement) return
+		const title = titleElement.innerText
+
+		if (title !== currentArtist) {
+			currentArtist = String(title)
+			console.log('New Artist', currentArtist)
+			ipcRenderer.send('handlePlay', currentArtist)
 		}
 
-		let track = document.getElementsByClassName('player-current-audio')[0].innerText
-		if(currentTrack !== track){
-			currentTrack = String(track)
-			let trackTruncated = String(track)
+		let trackElement = document.querySelector('[class*=RebrandPlayerSliderComponent__Track-]')
+		if (!trackElement) return
+		let track = document.querySelector('[class*=RebrandPlayerSliderComponent__Track-]').innerText
 
-			if(trackTruncated.includes('  — Buy')) {
-				trackTruncated = trackTruncated.replace('  — Buy', '')
-			}
+		if (track !== currentTrack) {
+			let trackTruncated = track.replace(/[\u2014\u002d]\sbuy$/gi, '')
+			trackTruncated = trackTruncated.replace('by ', '')
 
-			let notificationTitle
-			let notificationSubtitle
+			currentTrack = trackTruncated
+			console.log('New Track', currentTrack)
 
-			if(trackTruncated.includes('by')) {
-				notificationTitle = trackTruncated.slice(trackTruncated.search('by') + 3, trackTruncated.length)
-				notificationSubtitle = trackTruncated.slice(0, trackTruncated.search('by'));
-				trackTruncated = trackTruncated.replace('by', ' by')
-			} else {
-				notificationTitle = title
-				notificationSubtitle = trackTruncated
-			}
+			let notificationSubtitle = 'Mixcloud Play'
 
-			ipcRenderer.send('nowPlaying', trackTruncated, notificationTitle, notificationSubtitle)
+			ipcRenderer.send('nowPlaying', currentTrack, title, notificationSubtitle)
 		}
-	},2000)
+	}, 2000)
 })
 
 Object.defineProperties(NotificationDecorated, {

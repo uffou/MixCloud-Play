@@ -1,6 +1,6 @@
-MixCloud Play
+Mixcloud Play
 =====
-MixCloud Play is the missing desktop experience for [MixCloud.com](https://www.mixcloud.com) with support for media controls and showing current track in menu bar. Enjoy listening to new music for hours...
+Mixcloud Play is the missing desktop experience for [Mixcloud.com](https://www.mixcloud.com) with support for media controls and showing current track in menu bar. Enjoy listening to new music for hours...
 
 ## [Download for Mac](https://github.com/mountainash/MixCloud-Play/releases/download/v0.9.7/MixCloud.Play.app.zip)
 

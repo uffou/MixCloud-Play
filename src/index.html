@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8" />
-	<title>MixCloud Play</title>
+	<title>Mixcloud Play</title>
 	<link rel="stylesheet" type="text/css" media="screen" href="main.css" />
 </head>
 <body>
@@ -28,15 +28,6 @@
 		partition="persist:mixcloud"
 		webpreferences="nativeWindowOpen=true;experimentalFeatures"
 	></webview>
-	<script>
-
-webview.addEventListener('dom-ready', () => {
-  webview.openDevTools()
-});
-webview.addEventListener('console-message', (e) => {
-  console.log('Guest page logged a message:', e.message)
-})
-	</script>
 	<script src="renderer.js"></script>
 </body>
 </html>

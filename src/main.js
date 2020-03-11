@@ -10,11 +10,13 @@ const {
     Tray,
     shell
 } = require('electron');
+const menuTemplate = require(`./menu`);
 
 var mainWindow = null;
 var tray = null;
 var contextMenu = null;
 var _isPlaying = false;
+var DEBUG = false;
 
 const toggleWindow = () => {
 	mainWindow.show();
@@ -52,10 +54,10 @@ function togglePlay() {
 	return _isPlaying;
 }
 
-// menuTemplate.setDashboardClickHandler(() => {
-//     mainWindow.webContents.send('goToDashboard');
-// })
-// const menu = Menu.buildFromTemplate(menuTemplate);
+menuTemplate.setDashboardClickHandler(() => {
+    mainWindow.webContents.send('goToDashboard');
+})
+const menu = Menu.buildFromTemplate(menuTemplate);
 
 // function closeHandler(event) {
 //     event.preventDefault();
@@ -74,7 +76,7 @@ app.on('web-contents-created', (event, contents) => {
 
 app.on('ready', () => {
 	initTray();
-    // Menu.setApplicationMenu(menu);
+    Menu.setApplicationMenu(menu);
 
     mainWindow = new BrowserWindow({
 		titleBarStyle: 'hiddenInset',
@@ -91,7 +93,9 @@ app.on('ready', () => {
 	mainWindow.loadFile(path.join(__dirname, 'index.html'));
     //mainWindow.loadURL(path.join('file://', __dirname, '/index.html'))
 
-    mainWindow.openDevTools();
+	if (DEBUG) {
+		mainWindow.openDevTools();
+	}
 
     // mainWindow.on('focus', () => {
     //     // app.dock.setBadge("");
@@ -154,7 +158,7 @@ ipcMain.on('notification', (_event, notificationIndex, subtitle) => {
     // app.dock.setBadge("!");
 
     const notification = new Notification({
-        title: 'MixCloud Play',
+        title: 'Mixcloud Play',
         subtitle,
         silent: true
     });
