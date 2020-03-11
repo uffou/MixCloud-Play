@@ -2,8 +2,14 @@ version: "3"
 
 services:
   mixcloud-play:
-    image: electronuserland/builder:latest
+    image: electronuserland/builder:wine-mono-11.19
     volumes:
       - .:/usr/src/app
+      - ./node_modules:/project/node_modules
+      - ~/.cache/electron:/root/.cache/electron
+      - ~/.cache/electron-builder:/root/.cache/electron-builder
+    environment:
+      ELECTRON_CACHE: "/root/.cache/electron"
+      ELECTRON_BUILDER_CACHE: "/root/.cache/electron-builder"
     working_dir: /usr/src/app
     command: /bin/bash -c "yarn && yarn dist"
