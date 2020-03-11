@@ -174,7 +174,7 @@ ipcMain.on('handlePause', (_, track) => {
 
     tray.setTitle(track + ' (paused)')
     const notification = new Notification({
-        title: 'Mix Paused',
+        title: 'Show Paused',
         subtitle: track,
         silent: true
     });
