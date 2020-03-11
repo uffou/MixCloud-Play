@@ -54,18 +54,18 @@
 	},
 	"main": "build/main.js",
 	"devDependencies": {
-		"@babel/core": "^7.0.0-rc.3",
-		"@babel/plugin-proposal-class-properties": "^7.0.0-rc.3",
-		"@babel/plugin-proposal-decorators": "^7.0.0-rc.3",
-		"@babel/plugin-proposal-function-bind": "^7.0.0-rc.3",
-		"@babel/preset-env": "^7.0.0-rc.3",
-		"babel-loader": "^8.0.0-beta.6",
-		"copy-webpack-plugin": "^4.5.2",
+		"@babel/core": "7.0.0-rc.3",
+		"@babel/plugin-proposal-class-properties": "7.0.0-rc.3",
+		"@babel/plugin-proposal-decorators": "7.0.0-rc.3",
+		"@babel/plugin-proposal-function-bind": "7.0.0-rc.3",
+		"@babel/preset-env": "7.0.0-rc.3",
+		"babel-loader": "8.0.0-beta.6",
+		"copy-webpack-plugin": "4.5.2",
 		"electron": "2.0.8",
 		"electron-builder": "20.28.2",
-		"rimraf": "^2.6.2",
-		"webpack": "^4.17.1",
-		"webpack-cli": "^3.1.0"
+		"rimraf": "2.6.2",
+		"webpack": "4.17.1",
+		"webpack-cli": "3.1.0"
 	},
 	"dependencies": {}
 }
