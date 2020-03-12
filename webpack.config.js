@@ -3,12 +3,7 @@ const path = require('path');
 const { version: electronVersion } = require(`electron/package.json`);
 const CopyPlugin = require('copy-webpack-plugin');
 
-module.exports = [{
-	entry: './src/blank.js',
-	output: {
-		path: path.join(__dirname, 'build'),
-		filename: 'blank.js'
-	},
+module.exports = [
 	devtool: 'source-map',
 	module: {
 		rules: [
