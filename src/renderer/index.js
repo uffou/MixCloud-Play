@@ -1,9 +1,21 @@
 const { ipcRenderer } = require('electron');
-const BASE_URL = 'https://www.mixcloud.com';
-const DEBUG = false;
+import * as path from 'path'
 
-// const logger = require('electron').remote.require('./logger');
-// logger.log('Woohoo!');
+const BASE_URL = 'https://www.mixcloud.com';
+const DEBUG = process.env.ELECTRON_WEBPACK_APP_DEBUG || false
+const LOCAL = process.env.ELECTRON_WEBPACK_APP_LOCAL || false
+
+if (DEBUG)
+	console.info(JSON.stringify(process.env, null, 4))
+	console.info(__dirname)
+	console.info(__static)
+
+const getStatic = (val) => {
+	if (LOCAL) {
+		return path.resolve(__dirname, '../../static/' + val) // __dirname is /build/renderer/
+	}
+	return path.resolve(__static, val)
+}
 
 function concatEndpoints(endpoints) {
 	for (const i in endpoints) {
@@ -28,14 +40,23 @@ webview.addEventListener('permissionrequest', ({e}) => {
 })
 
 function didFinishLoad() {
+	console.log('didFinishLoad')
 	webview.removeEventListener('did-finish-load', didFinishLoad)
 	webview.send('init')
 }
 webview.addEventListener('did-finish-load', didFinishLoad)
 
+// Set Window Title
 webview.addEventListener('page-title-updated', ({title}) => {
 	document.title = `${title} | Mixcloud Play`
 })
+
+// Inserting CSS
+const link = document.createElement('link')
+link.href = getStatic('style.css') // as it's location moves for different compiles
+link.type = 'text/css'
+link.rel = 'stylesheet'
+document.getElementsByTagName('head')[0].appendChild(link)
 
 ipcRenderer.on('goBack', () => {
 	webview.goBack()
@@ -94,6 +115,7 @@ HUDnext.addEventListener('click', (e) => {
 });
 
 if (DEBUG) {
+	document.getElementsByTagName('body')[0].className = 'DEBUG'
 	webview.addEventListener('dom-ready', () => {
 		webview.openDevTools()
 	});

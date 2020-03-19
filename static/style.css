@@ -13,16 +13,17 @@ webview {
 	height: 100%;
 	background: #FFF;
 }
-#dragger {
-	height: 54px;
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	-webkit-app-region: drag;
-	pointer-events: none;
+body.DEBUG #hud {
+	display: block !important;
+}
+body.DEBUG webview {
+	height: calc(100% - 18px);
 }
 #hud {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
     display: grid;
     grid-gap: 10px;
 	grid-template-columns: auto 100px;
@@ -31,6 +32,8 @@ webview {
 	background: rgba(100, 100, 100, .5);
 	text-align: right;
 	transition: background .5s;
+	pointer-events: none;
+	-webkit-app-region: drag;
 }
 #hud:hover {
 	background: rgba(100, 100, 100, .75);

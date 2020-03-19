@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8" />
+	<meta charset="utf-8">
 	<title>Mixcloud Play</title>
-	<link rel="stylesheet" type="text/css" media="screen" href="main.css" />
 </head>
 <body>
-	<div id="dragger"></div>
-	<div id="hud">
+	<div id="hud" style="display:none">
 		<div id="info">
 			<p id="name"><span class="label">ℹ️</span> <span id="title">track title</span> <span id="artist">track artist</span></p>
 			<p id="link"><span class="label">🔗</span> <span id="url">https://mixcloud.com/play/this/song</span></p>
@@ -24,10 +22,9 @@
 		allowpopups
 		disablewebsecurity
 		preload="./preload.js"
-		src="https://www.mixcloud.com"
+		src="https://www.mixcloud.com/"
 		partition="persist:mixcloud"
 		webpreferences="nativeWindowOpen=true;experimentalFeatures"
 	></webview>
-	<script src="renderer.js"></script>
 </body>
 </html>

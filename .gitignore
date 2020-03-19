@@ -1,3 +1,6 @@
+.env
+Electron.app
 node_modules/
 dist/
 build/
+app_contents/

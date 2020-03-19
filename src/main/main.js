@@ -1,6 +1,6 @@
-const path = require('path');
+// 'use strict'
 
-const {
+import {
     app,
     BrowserWindow,
     globalShortcut,
@@ -9,23 +9,41 @@ const {
     Notification,
     Tray,
     shell
-} = require('electron');
-const menuTemplate = require(`./menu`);
+} from 'electron'
 
-var mainWindow = null;
-var tray = null;
-var contextMenu = null;
+import * as path from 'path'
+import * as url from 'url'
+
+const DEBUG = process.env.ELECTRON_WEBPACK_APP_DEBUG || false
+const LOCAL = process.env.ELECTRON_WEBPACK_APP_LOCAL || false
+
+if (DEBUG)
+	console.log(JSON.stringify(process.env, null, 4))
+	console.info(__dirname)
+	console.info(__static)
+
+const getStatic = (val) => {
+	if (LOCAL) {
+		return path.resolve(__dirname, '../../static/'+val) // __dirname is /build/main/
+	}
+	return path.resolve(__static, val)
+}
+
+let mainWindow = null
+const menuTemplate = require('./menu.js')
+
+let tray = null;
+let contextMenu = null;
 var _isPlaying = false;
-var DEBUG = false;
 
 const toggleWindow = () => {
 	mainWindow.show();
 	mainWindow.focus();
-};
+}
 
-async function initTray() {
+const initTray = () => {
 	if (!tray) {
-		tray = new Tray(path.join(__dirname, './img/logoTemplate.png'));
+		tray = new Tray(getStatic('logoTemplate.png'));
 		tray.on('click', togglePlay);
 		tray.on('right-click', displayContextMenu);
 		tray.on('double-click', toggleWindow);
@@ -80,21 +98,45 @@ app.on('ready', () => {
 
     mainWindow = new BrowserWindow({
 		titleBarStyle: 'hiddenInset',
+		backgroundColor: '#ADADAD',
         width: 1100,
         minWidth: 768,
         height: 800,
 		minHeight: 400,
+		isMinimizable: false, // don't seem to work in current version
+		isMaximizable: false,
 		webPreferences: {
-            // preload: 'preload.js', //
+            preload: 'preload.js',
 			nodeIntegration: true //TODO turn this off
 		}
-    });
+	})
 
-	mainWindow.loadFile(path.join(__dirname, 'index.html'));
-    //mainWindow.loadURL(path.join('file://', __dirname, '/index.html'))
+	let template_path = LOCAL ? '../renderer/index.html' : 'index.html'
+
+	mainWindow.loadURL(url.format({
+		pathname: path.join(__dirname, template_path),
+		protocol: 'file'
+	}))
 
 	if (DEBUG) {
-		mainWindow.openDevTools();
+		// mainWindow.openDevTools();
+
+		// auto-open dev tools
+		mainWindow.webContents.on('did-frame-finish-load', () => {
+			mainWindow.webContents.openDevTools();
+		})
+
+		// add inspect element on right click menu
+		mainWindow.webContents.on('context-menu', (e, props) => {
+			Menu.buildFromTemplate([
+				{label: 'Inspect element',
+					click() {
+						mainWindow.inspectElement(props.x, props.y);
+					},
+				},
+			]).popup(mainWindow);
+		});
+
 	}
 
     // mainWindow.on('focus', () => {
@@ -233,3 +275,11 @@ ipcMain.on('handlePlay', (_, track) => {
         notification.close();
     }, 7000);
 });
+
+app.on('window-all-closed', () => {
+	// On OS X it is common for applications and their menu bar
+	// to stay active until the user quits explicitly with Cmd + Q
+	if (process.platform !== 'darwin') {
+		app.quit()
+	}
+})

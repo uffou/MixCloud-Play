@@ -8,7 +8,8 @@
 		"macOS",
 		"mixcloud",
 		"wrapper",
-		"media keys"
+		"media keys",
+		"electron"
 	],
 	"author": {
 		"name": "Codemotion Ltd."
@@ -25,43 +26,62 @@
 		"type": "git",
 		"url": "git@github.com:uffou/MixCloud-Play.git"
 	},
+	"homepage": "https://github.com/uffou/MixCloud-Play/issues",
 	"bugs": {
 		"url": "https://github.com/uffou/MixCloud-Play/issues"
 	},
 	"license": "UNLICENSED",
 	"scripts": {
-		"start": "electron .",
-		"pack": "electron-builder --dir",
-		"build": "electron-builder --dir -m",
-		"dist": "electron-builder -m"
+		"dev": "electron-webpack dev",
+		"compile": "electron-webpack",
+		"compile:debug": "ELECTRON_WEBPACK_APP_DEBUG=true electron-webpack",
+		"compile:local": "ELECTRON_WEBPACK_APP_LOCAL=true yarn compile:debug",
+		"build": "electron-builder --mac",
+		"dist": "yarn compile && yarn build",
+		"dist:debug": "yarn compile:debug && yarn build",
+		"dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null"
+	},
+	"electronWebpack": {
+		"title": false,
+		"staticSourceDirectory": "static",
+		"main": {
+			"extraEntries": ["@/preload.js"]
+		},
+		"renderer": {
+			"template": "src/renderer/index.html"
+		}
 	},
 	"build": {
 		"files": [
-			"build"
+			"static"
 		],
 		"appId": "com.codemotionapps.mixcloud",
 		"copyright": "Copyright © 2019 Codemotion Ltd.",
 		"productName": "Mixcloud Play",
 		"mac": {
+			"target": "tar.gz",
 			"category": "public.app-category.music",
-			"icon": "Mixcloud.icns",
-			"target": "dmg"
+			"icon": "Mixcloud.icns"
 		}
 	},
-	"main": "build/main.js",
+	"main": "dist/main/main.js",
 	"devDependencies": {
 		"@babel/core": "7.8.7",
 		"@babel/plugin-proposal-class-properties": "7.8.3",
-		"@babel/plugin-proposal-decorators": "7.8.3",
-		"@babel/plugin-proposal-function-bind": "7.8.3",
 		"@babel/preset-env": "7.8.7",
-		"babel-loader": "8.0.6",
 		"copy-webpack-plugin": "5.1.1",
-		"electron": "3",
-		"electron-builder": "^22.4.0",
-		"webpack": "4.42.0",
-		"webpack-cli": "3.3.11"
+		"electron": "3.1.13",
+		"electron-builder": "22.4.0",
+		"electron-webpack": "2.7.4",
+		"webpack": "4.42.0"
 	},
-	"dependencies": {},
-	"postinstall": "electron-builder install-app-deps"
+	"resolutions": {
+		"webpack-sources": "1.4.3"
+	},
+	"dependencies": {
+		"source-map-support": "0.5.16"
+	},
+	"renovate": {
+		"extends": ["config:base"]
+	}
 }

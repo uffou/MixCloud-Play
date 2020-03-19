@@ -2,6 +2,8 @@ const path = require(`path`);
 
 const { ipcRenderer, webFrame, shell } = require(`electron`);
 
+console.log('preload called');
+
 // Open all links in external browser
 document.addEventListener('click', function(event) {
 	if (event.target.href) {
