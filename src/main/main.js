@@ -106,7 +106,6 @@ app.on('ready', () => {
 		isMinimizable: false, // don't seem to work in current version
 		isMaximizable: false,
 		webPreferences: {
-            preload: 'preload.js',
 			nodeIntegration: true //TODO turn this off
 		}
 	})

@@ -2,56 +2,7 @@ const path = require(`path`);
 
 const { ipcRenderer, webFrame, shell } = require(`electron`);
 
-console.log('preload called');
-
-// Open all links in external browser
-document.addEventListener('click', function(event) {
-	if (event.target.href) {
-		console.log(event.target.href)
-	}
-	if (event.target.tagName === 'A' && event.target.href.startsWith('http') &&
-	!event.target.href.includes('https://www.mixcloud.com/')) {
-		event.preventDefault()
-		shell.openExternal(event.target.href)
-	}
-})
-
-const mutationObserverConfig = { childList: true };
-
-function createObserverCallback(tagName, callback){
-	return function(records){
-		for(const record of records){
-			for(const node of record.addedNodes){
-				if(node.tagName === tagName){
-					callback();
-				}
-			}
-		}
-	}
-}
-
-let bodyObserver;
-const bodyObserverCallback = createObserverCallback('BODY', () => {
-	console.log('change')
-	bodyObserver.disconnect();
-})
-bodyObserver = new MutationObserver(bodyObserverCallback)
-
-let headObserver;
-const headObserverCallback = createObserverCallback('HEAD', () => {
-	headObserver.disconnect();
-})
-headObserver = new MutationObserver(headObserverCallback)
-
-let documentObserver;
-const documentObserverCallback = createObserverCallback('HTML', () => {
-	headObserver.observe(document.documentElement, mutationObserverConfig)
-	bodyObserver.observe(document.documentElement, mutationObserverConfig)
-	documentObserver.disconnect();
-})
-documentObserver = new MutationObserver(documentObserverCallback)
-documentObserver.observe(document, mutationObserverConfig)
-// #endregion
+console.log('main preload called');
 
 // #region Notification
 const notifications = [];
@@ -76,23 +27,44 @@ function NotificationDecorated(title) {
 	return notification;
 }
 
-//Elements
-document.addEventListener('click', function(event) {
-	const playPause = document.querySelector('[class*=PlayButton__PlayerControl]')
-	const eventPath = event.path || (event.composedPath && event.composedPath()) || []
-	const playPauseClicked = eventPath.find(path => path === playPause)
-	if (playPauseClicked) {
-		console.log(playPauseClicked)
-		const paused = playPauseClicked.classList.contains('dvjoTG')
-		console.log(paused)
-		let trackElement = document.querySelector('[class*=RebrandPlayerControls__ShowTitle]')
-		if (!trackElement) return
-		let track = trackElement.innerText
-		console.log(track)
-		ipcRenderer.send(paused ? 'handlePause' : 'handlePlay', track);
+Object.defineProperties(NotificationDecorated, {
+	permission: {
+		get(){
+			return NotificationOriginal.permission;
+		}
+	},
+	maxActions: {
+		get(){
+			return NotificationOriginal.maxActions;
+		}
+	},
+	requestPermission: {
+		get(){
+			return NotificationOriginal.requestPermission;
+		}
 	}
-	console.log(pause,play)
-});
+})
+
+window.Notification = NotificationDecorated;
+// #endregion
+
+// #region Custom notification sound
+webFrame.registerURLSchemeAsBypassingCSP('file');
+
+const AudioOriginal = Audio;
+const beaconNotificationRegex = /beacon-notification\.(?:.*)$/;
+
+function createObserverCallback(tagName, callback) {
+	return function(records) {
+		for (const record of records) {
+			for (const node of record.addedNodes) {
+				if (node.tagName === tagName) {
+					callback()
+				}
+			}
+		}
+	}
+}
 
 ipcRenderer.on('notificationClicked', (_, notificationIndex) => {
 	const originalOpen = window.open;
@@ -155,29 +127,20 @@ ipcRenderer.on('init', () => {
 	}, 2000)
 })
 
-Object.defineProperties(NotificationDecorated, {
-	permission: {
-		get(){
-			return NotificationOriginal.permission;
-		}
-	},
-	maxActions: {
-		get(){
-			return NotificationOriginal.maxActions;
-		}
-	},
-	requestPermission: {
-		get(){
-			return NotificationOriginal.requestPermission;
-		}
+//Elements
+document.addEventListener('click', function(event) {
+	const playPause = document.querySelector('[class*=PlayButton__PlayerControl]')
+	const eventPath = event.path || (event.composedPath && event.composedPath()) || []
+	const playPauseClicked = eventPath.find(path => path === playPause)
+	if (playPauseClicked) {
+		console.log(playPauseClicked)
+		const paused = playPauseClicked.classList.contains('dvjoTG')
+		console.log(paused)
+		let trackElement = document.querySelector('[class*=RebrandPlayerControls__ShowTitle]')
+		if (!trackElement) return
+		let track = trackElement.innerText
+		console.log(track)
+		ipcRenderer.send(paused ? 'handlePause' : 'handlePlay', track);
 	}
-})
-
-window.Notification = NotificationDecorated;
-// #endregion
-
-// #region Custom notification sound
-webFrame.registerURLSchemeAsBypassingCSP('file');
-
-const AudioOriginal = Audio;
-const beaconNotificationRegex = /beacon-notification\.(?:.*)$/;
+	console.log(pause,play)
+});
