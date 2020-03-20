@@ -3,6 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>Mixcloud Play</title>
+	<meta http-equiv="Content-Security-Policy" content="default-src mixcloud.com  *.mixcloud.com; script-src 'unsafe-inline' 'self'; script-src-elem 'unsafe-inline' 'self'; style-src 'unsafe-inline' 'self'; style-src-elem 'unsafe-inline' 'self'">
 </head>
 <body>
 	<div id="hud" style="display:none">
@@ -19,12 +20,9 @@
 	</div>
 	<webview
 		id="webview"
-		allowpopups
-		disablewebsecurity
 		preload="./preload.js"
 		src="https://www.mixcloud.com/"
 		partition="persist:mixcloud"
-		webpreferences="nativeWindowOpen=true;experimentalFeatures"
 	></webview>
 </body>
 </html>
