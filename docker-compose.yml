@@ -11,4 +11,4 @@ services:
       ELECTRON_CACHE: "/root/.cache/electron"
       ELECTRON_BUILDER_CACHE: "/root/.cache/electron-builder"
     working_dir: /project
-    command: /bin/bash -c "yarn && yarn dist"
+    command: /bin/bash -c "npm install && npm build:debug" # build on a macOS host for dist

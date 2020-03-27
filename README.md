@@ -15,25 +15,21 @@ Mixcloud Play is the missing desktop experience for [Mixcloud.com](https://www.m
 ## Getting started
 ## Building
 ```sh
-yarn dist
+npm install
+npm build
 ```
 
 ### Development
-Download "Electron.app" into the project root.
 
 ```sh
-yarn
-yarn build:local
-Electron.app/Contents/MacOS/Electron .
+npm start
 ```
 
-Use the compile macOS .app with Dev Tools and some extra debugging enabled.
+Use the compile macOS .app with Dev Tools and some extra debugging enabled:
 
 ```sh
-yarn
-yarn dist:debug
+npm build:debug
 ```
-
 
 ### Docker Compose
 ```sh

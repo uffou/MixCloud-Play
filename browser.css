@@ -1,0 +1,7 @@
+::selection {
+	background-color: transparent;
+}
+.ad-header-wrapper,
+.site-wrapper div:first-child {
+	-webkit-app-region: drag;
+}
