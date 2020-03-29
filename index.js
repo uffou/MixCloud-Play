@@ -8,7 +8,6 @@ const {
     Tray,
     shell
 } = require('electron');
-const { autoUpdater } = require('electron-updater');
 
 const path = require('path');
 const menuTemplate = require('./menu.js');
@@ -19,7 +18,7 @@ const config = new Config();
 
 const DEBUG = process.env.ELECTRON_DEBUG || false;
 
-if (1)
+if (DEBUG)
 	console.log(JSON.stringify(process.env, null, 4));
 
 let mainWindow = null;

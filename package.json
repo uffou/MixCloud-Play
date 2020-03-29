@@ -1,7 +1,7 @@
 {
 	"name": "mixcloud-play",
 	"productName": "Mixcloud Play",
-	"version": "0.11.0",
+	"version": "0.11.1",
 	"description": "The Mixcloud desktop client",
 	"keywords": [
 		"music",
@@ -25,18 +25,20 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "git@github.com:uffou/MixCloud-Play.git"
+		"url": "git@github.com:mountainash/Mixcloud-Play.git"
 	},
-	"homepage": "https://github.com/uffou/MixCloud-Play",
+	"homepage": "https://github.com/mountainash/Mixcloud-Play",
 	"bugs": {
-		"url": "https://github.com/uffou/MixCloud-Play/issues"
+		"url": "https://github.com/mountainash/Mixcloud-Play/issues"
 	},
 	"license": "UNLICENSED",
 	"scripts": {
 		"start": "electron .",
 		"build": "electron-builder --mac",
+		"build:dir": "electron-builder --mac --dir",
 		"start:debug": "ELECTRON_DEBUG=true npm run start",
-		"build:debug": "ELECTRON_DEBUG=true npm run build"
+		"build:debug": "ELECTRON_DEBUG=true npm run build:dir",
+		"publish:draft": "EP_DRAFT=true npm run build"
 	},
 	"dependencies": {
 		"electron-config": "^2.0.0",
@@ -52,7 +54,6 @@
 		"copyright": "Copyright © 2019 Codemotion Ltd.",
 		"productName": "Mixcloud Play",
 		"mac": {
-			"target": "tar.gz",
 			"category": "public.app-category.music",
 			"icon": "Mixcloud.icns"
 		},
