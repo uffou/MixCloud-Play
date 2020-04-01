@@ -232,26 +232,18 @@ ipcMain.on('handlePause', (_, track) => {
     }, 7000);
 });
 
-ipcMain.on('nowPlaying', (_, nowPlaying, title, subtitle) => {
-	console.log(`${nowPlaying} (${title} ${subtitle})`);
+ipcMain.on('nowPlaying', (_, title, subtitle) => {
+	console.log(`${title} ${subtitle}`);
 
-    tray.setTitle(nowPlaying);
-
-    const notification = new Notification({
-        title: title,
-        subtitle: subtitle,
-        silent: true
-    });
-    notification.on('click', (e) => {
+	const notification = new Notification({
+		title: title,
+		subtitle: subtitle,
+		silent: true
+	});
+	notification.on('click', (e) => {
 		console.log('notificationClicked - nowPlaying', e);
-        page.send('notificationClicked', e);
-    });
-    notification.show();
-    setTimeout(() => {
-        notification.close();
-    }, 15000);
-})
 		page.send('notificationClicked', e);
+		win.show();
 	});
 	notification.show();
 	setTimeout(() => {
@@ -281,7 +273,7 @@ ipcMain.on('handlePlay', (_, track) => {
 
 function togglePlay() {
 	_isPlaying = !_isPlaying;
-	// page.send('playPause');
+	win.webContents.send('playPause');
 	console.log('Toggle Play:', _isPlaying);
 	return _isPlaying;
 }

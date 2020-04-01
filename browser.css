@@ -4,6 +4,23 @@
 .ad-header-wrapper,
 .site-wrapper div:first-child {
 	-webkit-app-region: drag;
+}
+.kZfKuO { /* Mixcloud Logo */
+	padding-left: 60px !important;
+}
+.container-wide .sidebar-small nav {
+	padding-left: 70px !important;
+}
+.sidebar-small.fix-to-top nav a {
+	padding-top: 1px !important;
+	padding-bottom: 1px !important;
+}
+
+/* Temp Fix */
+.dvRTvd { /* Play button - moving up */
+	line-height: 1;
+}
+
 #notify {
 	display: none;
 	position: absolute;
