@@ -15,25 +15,21 @@ Mixcloud Play is the missing desktop experience for [Mixcloud.com](https://www.m
 ## Getting started
 ## Building
 ```sh
-yarn dist
+npm install
+npm build
 ```
 
 ### Development
-Download "Electron.app" into the project root.
 
 ```sh
-yarn
-yarn build:local
-Electron.app/Contents/MacOS/Electron .
+npm start
 ```
 
-Use the compile macOS .app with Dev Tools and some extra debugging enabled.
+Use the compile macOS .app with Dev Tools and some extra debugging enabled:
 
 ```sh
-yarn
-yarn dist:debug
+npm build:debug
 ```
-
 
 ### Docker Compose
 ```sh
@@ -42,6 +38,17 @@ docker-compose run --rm mixcloud-play {any command here}
 ```
 
 Built app will output to `./dist/mac/Mixcloud Play.app`
+
+## Auto Update Publishing (GitHub)
+
+Publish app updates is set-up as per the [GithubOptions](https://www.electron.build/configuration/publish#githuboptions) for Electron Build's [Auto Update](https://www.electron.build/auto-update).
+
+```sh
+export GH_TOKEN={token_with_repo_scope}
+npm run publish:draft
+``
+
+A release in the specified GitHub repo should be drafted and ready for release.
 
 ## Dev Tips
 ### Asar Extract

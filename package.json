@@ -1,6 +1,7 @@
 {
 	"name": "mixcloud-play",
-	"version": "0.10.5",
+	"productName": "Mixcloud Play",
+	"version": "0.11.1",
 	"description": "The Mixcloud desktop client",
 	"keywords": [
 		"music",
@@ -24,60 +25,45 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "git@github.com:uffou/MixCloud-Play.git"
+		"url": "git@github.com:mountainash/Mixcloud-Play.git"
 	},
-	"homepage": "https://github.com/uffou/MixCloud-Play/issues",
+	"homepage": "https://github.com/mountainash/Mixcloud-Play",
 	"bugs": {
-		"url": "https://github.com/uffou/MixCloud-Play/issues"
+		"url": "https://github.com/mountainash/Mixcloud-Play/issues"
 	},
 	"license": "UNLICENSED",
 	"scripts": {
-		"dev": "electron-webpack dev",
-		"compile": "electron-webpack",
-		"compile:debug": "ELECTRON_WEBPACK_APP_DEBUG=true electron-webpack",
-		"compile:local": "ELECTRON_WEBPACK_APP_LOCAL=true yarn compile:debug",
+		"start": "electron .",
 		"build": "electron-builder --mac",
-		"dist": "yarn compile && yarn build",
-		"dist:debug": "yarn compile:debug && yarn build",
-		"dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null"
+		"build:dir": "electron-builder --mac --dir",
+		"start:debug": "ELECTRON_DEBUG=true npm run start",
+		"build:debug": "ELECTRON_DEBUG=true npm run build:dir",
+		"publish:draft": "EP_DRAFT=true npm run build"
 	},
-	"electronWebpack": {
-		"title": false,
-		"staticSourceDirectory": "static",
-		"main": {
-			"extraEntries": [
-				"@/preload.js"
-			]
-		},
-		"renderer": {
-			"template": "src/renderer/index.html"
-		}
+	"dependencies": {
+		"electron-config": "^2.0.0",
+		"electron-updater": "^4.2.5",
+		"source-map-support": "0.5.16"
+	},
+	"devDependencies": {
+		"electron": "3.1.13",
+		"electron-builder": "22.4.0"
 	},
 	"build": {
-		"files": [
-			"static"
-		],
 		"appId": "com.codemotionapps.mixcloud",
 		"copyright": "Copyright © 2019 Codemotion Ltd.",
 		"productName": "Mixcloud Play",
 		"mac": {
-			"target": "tar.gz",
 			"category": "public.app-category.music",
 			"icon": "Mixcloud.icns"
-		}
-	},
-	"main": "dist/main/main.js",
-	"devDependencies": {
-		"electron": "3.1.13",
-		"electron-builder": "22.4.0",
-		"electron-webpack": "2.7.4",
-		"webpack": "4.42.0"
-	},
-	"resolutions": {
-		"webpack-sources": "1.4.3"
-	},
-	"dependencies": {
-		"source-map-support": "0.5.16"
+		},
+		"publish": [
+			{
+				"provider": "github",
+				"owner": "mountainash",
+				"repo": "taskana"
+			}
+		]
 	},
 	"renovate": {
 		"extends": [
