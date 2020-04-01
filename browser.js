@@ -169,6 +169,16 @@ ipcRenderer.on('next', () => {
 		image.click();
 });
 
+ipcRenderer.on('notify', (text) => {
+	console.log('notify', text);
+	let node = document.createElement('div');
+
+	node.id = 'notify';
+	node.innerHTML = 'Notification: ' + JSON.stringify(text);
+
+	webview.body.appendChild(node);
+});
+
 // ipcRenderer.on('init', () => {
 webview.addEventListener('DOMContentLoaded', () => {
 	let currentArtist = '';

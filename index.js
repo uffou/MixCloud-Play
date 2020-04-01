@@ -9,6 +9,7 @@ const {
     shell
 } = require('electron');
 
+const { autoUpdater } = require('electron-updater');
 const path = require('path');
 const menuTemplate = require('./menu.js');
 const menu = Menu.buildFromTemplate(menuTemplate);
@@ -18,10 +19,10 @@ const config = new Config();
 
 const DEBUG = process.env.ELECTRON_DEBUG || false;
 
-if (DEBUG)
-	console.log(JSON.stringify(process.env, null, 4));
+// if (DEBUG)
+// 	console.log(JSON.stringify(process.env, null, 4));
 
-let mainWindow = null;
+let win = null;
 let page;
 let isQuitting = false;
 
@@ -36,15 +37,15 @@ if (!isRunning) {
 }
 
 app.on('second-instance', () => {
-	if (mainWindow) {
-		if (mainWindow.isMinimized()) mainWindow.restore();
-		mainWindow.show();
+	if (win) {
+		if (win.isMinimized()) win.restore();
+		win.show();
 	}
 });
 
 const toggleWindow = () => {
-	mainWindow.show();
-	mainWindow.focus();
+	win.show();
+	win.focus();
 }
 
 const initTray = () => {
@@ -72,12 +73,14 @@ function displayContextMenu() {
 	tray.popUpContextMenu(contextMenu);
 }
 
-app.on('activate', () => { mainWindow.show() });
+app.on('activate', () => { win.show() });
 app.on('before-quit', () => isQuitting = true);
 
 app.on('ready', () => {
 	initTray();
-    Menu.setApplicationMenu(menu);
+	Menu.setApplicationMenu(menu);
+
+	autoUpdater.checkForUpdatesAndNotify();
 
 	let opts = {
 		show: false,
@@ -101,11 +104,11 @@ app.on('ready', () => {
 	};
 	Object.assign(opts, config.get('winBounds'));
 
-	mainWindow = new BrowserWindow(opts);
+	win = new BrowserWindow(opts);
 
-	mainWindow.loadURL('https://www.mixcloud.com/');
+	win.loadURL('https://www.mixcloud.com/');
 
-	page = mainWindow.webContents;
+	page = win.webContents;
 
 	page.on('new-window', (event, url) => {
 		shell.openExternal(url);
@@ -113,7 +116,7 @@ app.on('ready', () => {
 	});
 
 	if (DEBUG) {
-		// mainWindow.openDevTools();
+		win.openDevTools();
 
 		// auto-open dev tools
 		page.on('did-frame-finish-load', () => {
@@ -123,21 +126,21 @@ app.on('ready', () => {
 
 	page.on('dom-ready', function() {
 		page.insertCSS(fs.readFileSync(path.join(__dirname, 'browser.css'), 'utf8'));
-		mainWindow.show();
+		win.show();
 	});
 
-	mainWindow.on('close', (e) => {
+	win.on('close', (e) => {
 		if (!isQuitting) {
 			e.preventDefault();
 
 			if (process.platform === 'darwin') {
 				app.hide();
 			} else {
-				mainWindow.hide();
+				win.hide();
 			}
 		} else {
 			// save window size and position
-			config.set('winBounds', mainWindow.getBounds());
+			config.set('winBounds', win.getBounds());
 		}
 	});
 
@@ -187,9 +190,9 @@ app.on('ready', () => {
 });
 
 ipcMain.on('notification', (_event, notificationIndex, subtitle) => {
-    if (mainWindow.isFocused()) return;
+    if (win.isFocused()) return;
 
-    // app.dock.setBadge("!");
+	// app.dock.setBadge("!");
 
     const notification = new Notification({
         title: 'Mixcloud Play',
@@ -199,7 +202,7 @@ ipcMain.on('notification', (_event, notificationIndex, subtitle) => {
     notification.on('click', (e) => {
 		console.log('notificationClicked - click', e);
         page.send('notificationClicked', e);
-        mainWindow.show();
+        win.show();
     });
     notification.show();
     setTimeout(() => {
@@ -210,7 +213,9 @@ ipcMain.on('notification', (_event, notificationIndex, subtitle) => {
 ipcMain.on('handlePause', (_, track) => {
     // app.dock.setBadge("!");
 
-    tray.setTitle(track + ' (paused)')
+	tray.setTitle(track + ' (paused)');
+
+	page.send('notify', track);
     const notification = new Notification({
         title: 'Show Paused',
         subtitle: track,
@@ -219,7 +224,7 @@ ipcMain.on('handlePause', (_, track) => {
 	notification.on('click', (e) => {
 		console.log('notificationClicked - pause', e);
         page.send('notificationClicked', e);
-        mainWindow.show();
+        win.show();
     });
     notification.show();
     setTimeout(() => {
@@ -240,13 +245,19 @@ ipcMain.on('nowPlaying', (_, nowPlaying, title, subtitle) => {
     notification.on('click', (e) => {
 		console.log('notificationClicked - nowPlaying', e);
         page.send('notificationClicked', e);
-        mainWindow.show();
     });
     notification.show();
     setTimeout(() => {
         notification.close();
     }, 15000);
 })
+		page.send('notificationClicked', e);
+	});
+	notification.show();
+	setTimeout(() => {
+		notification.close();
+	}, 15000);
+});
 
 ipcMain.on('handlePlay', (_, track) => {
     // app.dock.setBadge("!");
@@ -260,7 +271,7 @@ ipcMain.on('handlePlay', (_, track) => {
     notification.on('click', (e) => {
 		console.log('notificationClicked - handlePlay', e);
         page.send('notificationClicked', e);
-        mainWindow.show();
+        win.show();
     });
     notification.show();
     setTimeout(() => {
@@ -274,3 +285,35 @@ function togglePlay() {
 	console.log('Toggle Play:', _isPlaying);
 	return _isPlaying;
 }
+
+/* Auto Update menu */
+autoUpdater.on('checking-for-update', () => {
+	const msg = 'Checking for update...';
+	console.log(msg);
+	page.send('notify', msg);
+});
+autoUpdater.on('update-available', (info) => {
+	const msg = 'Update available.';
+	console.log(msg);
+	page.send('notify', msg);
+});
+autoUpdater.on('update-not-available', (info) => {
+	const msg = 'Update not available.';
+	console.log(msg);
+	page.send('notify', msg);
+});
+autoUpdater.on('error', (err) => {
+	const msg = 'Error in auto-updater. ' + err;
+	console.log(msg);
+	page.send('notify', msg);
+});
+autoUpdater.on('download-progress', (progressObj) => {
+	const msg = 'Downloaded ' + progressObj.percent + '%';
+	console.log(msg);
+	page.send('notify', msg);
+});
+autoUpdater.on('update-downloaded', (info) => {
+	const msg = 'Update downloaded. Restart to update';
+	console.log(msg);
+	page.send('notify', msg);
+});
