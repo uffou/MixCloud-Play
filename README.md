@@ -1,16 +1,17 @@
 Mixcloud Play
 =====
-Mixcloud Play is the missing desktop experience for [Mixcloud.com](https://www.mixcloud.com) with support for media controls and showing current track in menu bar. Enjoy listening to new music for hours...
+Mixcloud Play is the missing desktop experience for [Mixcloud.com](https://www.mixcloud.com/) with support for media controls and showing current track in menu bar. Enjoy listening to hours of new music...
 
-## [Download for Mac](https://github.com/mountainash/Mixcloud-Play/releases/download/v0.9.7/MixCloud.Play.app.zip)
+## [Download for Mac](https://github.com/mountainash/Mixcloud-Play/releases/latest)
 
-![screenshot](https://raw.githubusercontent.com/mountainash/Mixcloud-Play/master/Screenshot.png)
+[![screenshot](https://raw.githubusercontent.com/mountainash/Mixcloud-Play/master/Screenshot.png)](https://github.com/mountainash/Mixcloud-Play/releases/latest)
 
 ## Features
-1. Media controls - play/pause, next
+1. Media controls - play/pause, next {broken}
 2. Menu bar track title
 3. Song Notifications
 4. Modern desktop look
+5. Last.fm Scrobbing (_comming soon_)
 
 ## Getting started
 ## Building
