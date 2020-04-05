@@ -49,7 +49,7 @@ ipcRenderer.on('notificationClicked', (_, notificationIndex) => {
 });
 
 // Open all links in external browser
-webview.addEventListener('click', function(event) {
+webview.addEventListener('click', (e) => {
 	if (event.target.href) {
 		console.log(event.target.href);
 	}
@@ -201,7 +201,7 @@ webview.addEventListener('DOMContentLoaded', () => {
 	}, 2000);
 });
 
-webview.addEventListener('click', function(event) {
+webview.addEventListener('click', (e) => {
 	const playPause = webview.querySelector(DomHooks.playbutton);
 	const eventPath = event.path || (event.composedPath && event.composedPath()) || [];
 	const playPauseClicked = eventPath.find(path => path === playPause);

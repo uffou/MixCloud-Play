@@ -125,9 +125,13 @@ app.on('ready', () => {
 		});
 	};
 
-	page.on('dom-ready', function() {
+	page.on('dom-ready', () => {
 		page.insertCSS(fs.readFileSync(path.join(__dirname, 'browser.css'), 'utf8'));
 		win.show();
+
+		// Tricking the web browser into thinking that the user has intacted with the page, to allow audio to play
+		page.sendInputEvent({type:'mouseDown', x:10, y: 10, button:'left', clickCount: 1});
+		page.sendInputEvent({type:'mouseUp', x:10, y: 10, button:'left', clickCount: 1});
 	});
 
 	win.on('close', (e) => {
@@ -153,7 +157,7 @@ app.on('ready', () => {
 	// Originally copied from https://gist.github.com/twolfson/0a03820e27583cc9ad6e
 	// Docs: https://www.electronjs.org/docs/api/global-shortcut
 	// Electron and launching app (Terminal or VSCode) need to be approved: https://developer.apple.com/library/archive/documentation/Accessibility/Conceptual/AccessibilityMacOSX/OSXAXTestingApps.html
-    var registered = globalShortcut.register('MediaNextTrack', function() {
+    var registered = globalShortcut.register('MediaNextTrack', () => {
         console.log('medianexttrack pressed');
         page.send('next');
     });
@@ -163,7 +167,7 @@ app.on('ready', () => {
         console.log('medianexttrack registration bound!');
     }
 
-    var registered = globalShortcut.register('MediaPlayPause', function() {
+    var registered = globalShortcut.register('MediaPlayPause', () => {
         console.log('MediaPlayPause pressed', _isPlaying);
 		togglePlay();
     });
@@ -173,7 +177,7 @@ app.on('ready', () => {
         console.log('MediaPlayPause registration bound!');
     }
 
-    var registered = globalShortcut.register('MediaPreviousTrack', function() {
+    var registered = globalShortcut.register('MediaPreviousTrack', () => {
         console.log('mediaprevioustrack pressed');
     });
     if (!registered) {
@@ -182,7 +186,7 @@ app.on('ready', () => {
         console.log('mediaprevioustrack registration bound!');
     }
 
-    var registered = globalShortcut.register('MediaStop', function() {
+    var registered = globalShortcut.register('MediaStop', () => {
         console.log('mediastop pressed');
     });
     if (!registered) {
