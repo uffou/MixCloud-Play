@@ -34,6 +34,7 @@ var _isPlaying = false;
 
 const isRunning = app.requestSingleInstanceLock();
 app.allowRendererProcessReuse = true;
+app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
 
 if (!isRunning) {
 	app.quit();
@@ -128,10 +129,6 @@ app.on('ready', () => {
 	page.on('dom-ready', () => {
 		page.insertCSS(fs.readFileSync(path.join(__dirname, 'browser.css'), 'utf8'));
 		win.show();
-
-		// Tricking the web browser into thinking that the user has intacted with the page, to allow audio to play
-		page.sendInputEvent({type:'mouseDown', x:10, y: 10, button:'left', clickCount: 1});
-		page.sendInputEvent({type:'mouseUp', x:10, y: 10, button:'left', clickCount: 1});
 	});
 
 	win.on('close', (e) => {

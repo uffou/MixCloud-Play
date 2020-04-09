@@ -13,15 +13,13 @@ Mixcloud Play is the missing desktop experience for [Mixcloud.com](https://www.m
 4. Modern desktop look
 5. Last.fm Scrobbing (_comming soon_)
 
-## Getting started
-## Building
+## Development
+### Building
 ```sh
 npm install
 npm build
 ```
-
-### Development
-
+**OR**
 ```sh
 npm start
 ```
@@ -40,19 +38,19 @@ docker-compose run --rm mixcloud-play {any command here}
 
 Built app will output to `./dist/mac/Mixcloud Play.app`
 
-## Auto Update Publishing (GitHub)
+### Auto Update Publishing (GitHub)
 
 Publish app updates is set-up as per the [GithubOptions](https://www.electron.build/configuration/publish#githuboptions) for Electron Build's [Auto Update](https://www.electron.build/auto-update).
 
 ```sh
 export GH_TOKEN={token_with_repo_scope}
 npm run publish:draft
-``
+```
 
 A release in the specified GitHub repo should be drafted and ready for release.
 
-## Dev Tips
-### Asar Extract
+### Development Tips
+#### Asar Extract
 Linking/locating files inside the build can be hard to know what's going on inside the app.asar (inside Electron). Us the following commands to extract the contents of the .asar.
 
 1. Build the app fist `docker-compose run --rm mixcloud-play`

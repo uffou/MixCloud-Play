@@ -1,5 +1,7 @@
 .env
 Electron.app
+Screenshot.pxd
+Electron.app
 node_modules/
 dist/
 build/
