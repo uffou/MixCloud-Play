@@ -7,27 +7,38 @@ Mixcloud Play is the missing desktop experience for [Mixcloud.com](https://www.m
 [![screenshot](https://raw.githubusercontent.com/mountainash/Mixcloud-Play/master/Screenshot.png)](https://github.com/mountainash/Mixcloud-Play/releases/latest)
 
 ## Features
-1. Media controls - play/pause, next {broken}
+1. Media controls - play/pause, next, back (back [requires Mixcloud _PREMIUM_ or _SELECT_](https://help.mixcloud.com/hc/en-us/articles/360004054059))
 2. Menu bar track title
 3. Song Notifications
 4. Modern desktop look
 5. Last.fm Scrobbing (_comming soon_)
 
+## Enable Media Controls
+
+To allow the media key events to be passed through to the app on macOS:
+
+1. open **System Preferences**
+2. open **Security & Privacy**
+3. scroll down and select **Accessibility**
+4. Use `+` or drag&drop in the **Mixcloud Play.app**
+
+Open the app and try using the media keys.
+
 ## Development
 ### Building
 ```sh
 npm install
-npm build
+npm run build
 ```
 **OR**
 ```sh
-npm start
+npm run start
 ```
 
 Use the compile macOS .app with Dev Tools and some extra debugging enabled:
 
 ```sh
-npm build:debug
+npm run build:debug
 ```
 
 ### Docker Compose
@@ -41,6 +52,8 @@ Built app will output to `./dist/mac/Mixcloud Play.app`
 ### Auto Update Publishing (GitHub)
 
 Publish app updates is set-up as per the [GithubOptions](https://www.electron.build/configuration/publish#githuboptions) for Electron Build's [Auto Update](https://www.electron.build/auto-update).
+
+1. Update the app version number in both `package*.json` files.
 
 ```sh
 export GH_TOKEN={token_with_repo_scope}

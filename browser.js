@@ -4,7 +4,7 @@ const webview = document;
 const BASE_URL = 'https://www.mixcloud.com';
 const DEBUG = process.env.ELECTRON_DEBUG || false;
 
-// if (DEBUG)
+if (DEBUG)
 	console.info(JSON.stringify(process.env, null, 4));
 
 function concatEndpoints(endpoints) {
@@ -19,6 +19,8 @@ var is_playing = false;
 
 const DomHooks = {
 	playbutton: '[class*=PlayButton__PlayerControl]',
+	seekbutton: '[aria-label="Seek forwards"]',
+	backbutton: '[aria-label="Seek backwards"]',
 	showtitle: '[class*=RebrandPlayerControls__ShowTitle]',
 	trackartist: '[class*=RebrandPlayerSliderComponent__Artist]',
 	tracktitle: '[class*=RebrandPlayerSliderComponent__Track-]'
@@ -135,9 +137,23 @@ ipcRenderer.on('notificationClicked', (_, notificationIndex) => {
 
 ipcRenderer.on('playPause', () => {
 	console.log('playPause');
-	const playPause = document.querySelector(DomHooks.playbutton);
-	if (playPause)
-		playPause.click();
+	const el_play = document.querySelector(DomHooks.playbutton);
+	if (el_play)
+		el_play.click();
+});
+
+ipcRenderer.on('seek', () => {
+	console.log('seek');
+	const el_seek = document.querySelector(DomHooks.seekbutton);
+	if (el_seek)
+		el_seek.click();
+});
+
+ipcRenderer.on('back', () => {
+	console.log('back');
+	const el_back = document.querySelector(DomHooks.backbutton);
+	if (el_back)
+		el_back.click();
 });
 
 ipcRenderer.on('next', () => {

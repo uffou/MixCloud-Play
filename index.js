@@ -155,13 +155,13 @@ app.on('ready', () => {
 	// Docs: https://www.electronjs.org/docs/api/global-shortcut
 	// Electron and launching app (Terminal or VSCode) need to be approved: https://developer.apple.com/library/archive/documentation/Accessibility/Conceptual/AccessibilityMacOSX/OSXAXTestingApps.html
     var registered = globalShortcut.register('MediaNextTrack', () => {
-        console.log('medianexttrack pressed');
-        page.send('next');
+        console.log('MediaNextTrack pressed');
+        page.send('seek');
     });
     if (!registered) {
-        console.log('medianexttrack registration failed');
+        console.log('MediaNextTrack registration failed');
     } else {
-        console.log('medianexttrack registration bound!');
+        console.log('MediaNextTrack registration bound!');
     }
 
     var registered = globalShortcut.register('MediaPlayPause', () => {
@@ -175,21 +175,22 @@ app.on('ready', () => {
     }
 
     var registered = globalShortcut.register('MediaPreviousTrack', () => {
-        console.log('mediaprevioustrack pressed');
+        console.log('MediaPreviousTrack pressed');
+        page.send('back');
     });
     if (!registered) {
-        console.log('mediaprevioustrack registration failed');
+        console.log('MediaPreviousTrack registration failed');
     } else {
-        console.log('mediaprevioustrack registration bound!');
+        console.log('MediaPreviousTrack registration bound!');
     }
 
     var registered = globalShortcut.register('MediaStop', () => {
-        console.log('mediastop pressed');
+        console.log('MediaStop pressed');
     });
     if (!registered) {
-        console.log('mediastop registration failed');
+        console.log('MediaStop registration failed');
     } else {
-        console.log('mediastop registration bound!');
+        console.log('MediaStop registration bound!');
     }
 });
 
