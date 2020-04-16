@@ -19,6 +19,8 @@ var is_playing = false;
 
 const DomHooks = {
 	playbutton: '[class*=PlayButton__PlayerControl]',
+	seekbutton: '[aria-label="Seek forwards"]',
+	backbutton: '[aria-label="Seek backwards"]',
 	showtitle: '[class*=RebrandPlayerControls__ShowTitle]',
 	trackartist: '[class*=RebrandPlayerSliderComponent__Artist]',
 	tracktitle: '[class*=RebrandPlayerSliderComponent__Track-]'
@@ -28,23 +30,6 @@ const Endpoints = concatEndpoints({
 	DASHBOARD: '/dashboard/',
 	NEWSHOWS: '/dashboard/new-uploads/'
 });
-
-// webview.getSettings().setMediaPlaybackRequiresUserGesture(false); // to allow autoplay set by website
-
-webview.addEventListener('permissionrequest', ({ e }) => {
-	console.log('permission requested');
-
-	if (e.permission === 'media') {
-		e.request.allow();
-	}
-});
-
-function didFinishLoad() {
-	console.log('didFinishLoad');
-	webview.removeEventListener('did-finish-load', didFinishLoad);
-	webview.send('init');
-}
-webview.addEventListener('did-finish-load', didFinishLoad);
 
 // Set Window Title
 webview.addEventListener('page-title-updated', ({ title }) => {
@@ -65,22 +50,12 @@ ipcRenderer.on('notificationClicked', (_, notificationIndex) => {
 	webview.send('notificationClicked', notificationIndex);
 });
 
-// MIXCLOUD
-ipcRenderer.on('playPause', () => {
-	console.log('ipcRenderer: playPause');
-	webview.send('playPause');
-});
-ipcRenderer.on('next', () => {
-	console.log('ipcRenderer: next');
-	webview.send('next');
-});
-
 // Open all links in external browser
-webview.addEventListener('click', function(event) {
+webview.addEventListener('click', (e) => {
 	if (event.target.href) {
 		console.log(event.target.href);
 	}
-	if (event.target.tagName === 'A' && event.target.href.startsWith('http') && !event.target.href.includes('https://www.mixcloud.com/')) {
+	if (event.target.tagName === 'A' && event.target.href.startsWith('http') && !event.target.href.includes(BASE_URL + '/')) {
 		event.preventDefault();
 		shell.openExternal(event.target.href);
 	}
@@ -162,13 +137,27 @@ ipcRenderer.on('notificationClicked', (_, notificationIndex) => {
 
 ipcRenderer.on('playPause', () => {
 	console.log('playPause');
-	const playPause = document.querySelector('[class=dvRTvd]'); //TODO - extract these to a var
-	if (playPause)
-		playPause.click();
+	const el_play = document.querySelector(DomHooks.playbutton);
+	if (el_play)
+		el_play.click();
+});
+
+ipcRenderer.on('seek', () => {
+	console.log('seek');
+	const el_seek = document.querySelector(DomHooks.seekbutton);
+	if (el_seek)
+		el_seek.click();
+});
+
+ipcRenderer.on('back', () => {
+	console.log('back');
+	const el_back = document.querySelector(DomHooks.backbutton);
+	if (el_back)
+		el_back.click();
 });
 
 ipcRenderer.on('next', () => {
-	// TODO
+	// TODO - get working
 	console.log('next');
 	const row = Array.from(document.getElementsByClassName('cloudcast-upnext-row'));
 	const nowPlaying = row.findIndex(song => song.classList.contains('now-playing'));
@@ -188,7 +177,6 @@ ipcRenderer.on('notify', (text) => {
 	webview.body.appendChild(node);
 });
 
-// ipcRenderer.on('init', () => {
 webview.addEventListener('DOMContentLoaded', () => {
 	let currentTitle = '';
 	let currentArtist = '';
@@ -222,14 +210,14 @@ webview.addEventListener('DOMContentLoaded', () => {
 				currentTitle = title;
 				console.log('New Track:', currentTitle);
 
-				ipcRenderer.send('nowPlaying', currentTitle, currentArtist);
+				if (currentTitle !== '')
+					ipcRenderer.send('nowPlaying', currentTitle, currentArtist);
 			}
 		}
 	}, 2000);
 });
 
-//Elements
-webview.addEventListener('click', function(event) {
+webview.addEventListener('click', (e) => {
 	const playPause = webview.querySelector(DomHooks.playbutton);
 	const eventPath = event.path || (event.composedPath && event.composedPath()) || [];
 	const playPauseClicked = eventPath.find(path => path === playPause);
@@ -242,9 +230,8 @@ webview.addEventListener('click', function(event) {
 		console.log('Paused', paused);
 
 		const trackElement = webview.querySelector(DomHooks.showtitle);
-		if (!trackElement) return;
+		let track = trackElement ? trackElement.innerText : '';
 
-		let track = trackElement.innerText;
 		console.log(track);
 		ipcRenderer.send(paused ? 'handlePause' : 'handlePlay', track);
 	}

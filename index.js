@@ -17,10 +17,12 @@ const fs = require('fs');
 const Config = require('electron-config');
 const config = new Config();
 
+
+const BASE_URL = 'https://www.mixcloud.com/';
 const DEBUG = process.env.ELECTRON_DEBUG || false;
 
-// if (DEBUG)
-// 	console.log(JSON.stringify(process.env, null, 4));
+if (DEBUG)
+	console.log(JSON.stringify(process.env, null, 4));
 
 let win = null;
 let page;
@@ -31,6 +33,8 @@ let contextMenu = null;
 var _isPlaying = false;
 
 const isRunning = app.requestSingleInstanceLock();
+app.allowRendererProcessReuse = true;
+app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
 
 if (!isRunning) {
 	app.quit();
@@ -57,11 +61,10 @@ const initTray = () => {
 	}
 
 	contextMenu = Menu.buildFromTemplate([
-		// {
-		// 	label: 'Play',
-		// 	checked: togglePlay(),
-		// 	click: () => { togglePlay() }
-		// },
+		{
+			label: 'Play/Pause',
+			click: () => { togglePlay() }
+		},
 		// { label: 'Open website', click: () => { shell.openExternal( {Playing track's URL}) } },
 		{ type: 'separator' },
 		{ label: 'Give feedback', click: () => { shell.openExternal('https://github.com/uffou/MixCloud-Play/issues') } },
@@ -83,17 +86,16 @@ app.on('ready', () => {
 	autoUpdater.checkForUpdatesAndNotify();
 
 	let opts = {
+		type: 'textured',
 		show: false,
-		title: app.getName(),
-		titleBarStyle: 'hidden',
+		titleBarStyle: 'hiddenInset',
 		icon: path.join(__dirname, 'MixCloud.icns'),
 		backgroundColor: '#ADADAD',
 		width: 1100,
 		minWidth: 768,
 		height: 800,
 		minHeight: 400,
-		isMinimizable: false, // don't seem to work in current version
-		isMaximizable: false,
+		acceptFirstMouse: true,
 		webPreferences: {
 			// nodeIntegration: false,
 			nodeIntegration: true, //TODO turn this off
@@ -106,7 +108,7 @@ app.on('ready', () => {
 
 	win = new BrowserWindow(opts);
 
-	win.loadURL('https://www.mixcloud.com/');
+	win.loadURL(BASE_URL);
 
 	page = win.webContents;
 
@@ -116,15 +118,15 @@ app.on('ready', () => {
 	});
 
 	if (DEBUG) {
+		app.dock.setBadge('DEBUG');
 		win.openDevTools();
 
-		// auto-open dev tools
 		page.on('did-frame-finish-load', () => {
 			page.openDevTools();
 		});
 	};
 
-	page.on('dom-ready', function() {
+	page.on('dom-ready', () => {
 		page.insertCSS(fs.readFileSync(path.join(__dirname, 'browser.css'), 'utf8'));
 		win.show();
 	});
@@ -145,48 +147,56 @@ app.on('ready', () => {
 	});
 
     // mainWindow.on('focus', () => {
-    //     // app.dock.setBadge("");
+    //     // app.dock.setBadge('');
     // });
 
     // Load our media keys
-    // Copied from https://gist.github.com/twolfson/0a03820e27583cc9ad6e
-    var registered = globalShortcut.register('medianexttrack', function () {
-        console.log('medianexttrack pressed');
-        page.send('next');
+	// Originally copied from https://gist.github.com/twolfson/0a03820e27583cc9ad6e
+	// Docs: https://www.electronjs.org/docs/api/global-shortcut
+	// Electron and launching app (Terminal or VSCode) need to be approved: https://developer.apple.com/library/archive/documentation/Accessibility/Conceptual/AccessibilityMacOSX/OSXAXTestingApps.html
+    var registered = globalShortcut.register('MediaNextTrack', () => {
+        console.log('MediaNextTrack pressed');
+        page.send('seek');
     });
     if (!registered) {
-        console.log('medianexttrack registration failed');
+        console.log('MediaNextTrack registration failed');
     } else {
-        console.log('medianexttrack registration bound!');
+        console.log('MediaNextTrack registration bound!');
     }
 
-    var registered = globalShortcut.register('mediaplaypause', function () {
-        console.log('mediaplaypause pressed');
-        page.send('playPause');
+    var registered = globalShortcut.register('MediaPlayPause', () => {
+        console.log('MediaPlayPause pressed', _isPlaying);
+		togglePlay();
     });
     if (!registered) {
-        console.log('mediaplaypause registration failed');
+        console.log('MediaPlayPause registration failed');
     } else {
-        console.log('mediaplaypause registration bound!');
+        console.log('MediaPlayPause registration bound!');
     }
 
-    var registered = globalShortcut.register('mediaprevioustrack', function () {
-        console.log('mediaprevioustrack pressed');
+    var registered = globalShortcut.register('MediaPreviousTrack', () => {
+        console.log('MediaPreviousTrack pressed');
+        page.send('back');
     });
     if (!registered) {
-        console.log('mediaprevioustrack registration failed');
+        console.log('MediaPreviousTrack registration failed');
     } else {
-        console.log('mediaprevioustrack registration bound!');
+        console.log('MediaPreviousTrack registration bound!');
     }
 
-    var registered = globalShortcut.register('mediastop', function () {
-        console.log('mediastop pressed');
+    var registered = globalShortcut.register('MediaStop', () => {
+        console.log('MediaStop pressed');
     });
     if (!registered) {
-        console.log('mediastop registration failed');
+        console.log('MediaStop registration failed');
     } else {
-        console.log('mediastop registration bound!');
+        console.log('MediaStop registration bound!');
     }
+});
+
+app.on('will-quit', () => {
+	// Unregister all shortcuts
+	globalShortcut.unregisterAll();
 });
 
 ipcMain.on('notification', (_event, notificationIndex, subtitle) => {
@@ -211,7 +221,7 @@ ipcMain.on('notification', (_event, notificationIndex, subtitle) => {
 });
 
 ipcMain.on('handlePause', (_, track) => {
-    // app.dock.setBadge("!");
+    app.dock.setBadge('||'); // kind of looks like a "pause" symbol
 
 	tray.setTitle(track + ' (paused)');
 
@@ -234,6 +244,7 @@ ipcMain.on('handlePause', (_, track) => {
 
 ipcMain.on('nowPlaying', (_, title, subtitle) => {
 	console.log(`${title} ${subtitle}`);
+    app.dock.setBadge('');
 
 	const notification = new Notification({
 		title: title,
@@ -252,10 +263,11 @@ ipcMain.on('nowPlaying', (_, title, subtitle) => {
 });
 
 ipcMain.on('handlePlay', (_, track) => {
-    // app.dock.setBadge("!");
+    app.dock.setBadge('');
 
     tray.setTitle(track)
-    const notification = new Notification({
+
+	const notification = new Notification({
         title: 'Playing...',
         subtitle: track,
         silent: true
@@ -273,7 +285,7 @@ ipcMain.on('handlePlay', (_, track) => {
 
 function togglePlay() {
 	_isPlaying = !_isPlaying;
-	win.webContents.send('playPause');
+	page.send('playPause');
 	console.log('Toggle Play:', _isPlaying);
 	return _isPlaying;
 }
