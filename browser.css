@@ -2,8 +2,14 @@
 	background-color: transparent;
 }
 .ad-header-wrapper,
-.site-wrapper div:first-child {
+div[class^="Warnings__Container"],
+div[class^="RebrandHeader__"],
+.sidebar-small {
 	-webkit-app-region: drag;
+}
+input,
+textarea {
+	-webkit-app-region: no-drag !important;
 }
 .kZfKuO { /* Mixcloud Logo */
 	padding-left: 60px !important;
