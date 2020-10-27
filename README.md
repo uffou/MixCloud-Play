@@ -7,11 +7,10 @@ Mixcloud Play is the missing desktop experience for [Mixcloud.com](https://www.m
 [![screenshot](https://raw.githubusercontent.com/mountainash/Mixcloud-Play/master/Screenshot.jpg)](https://github.com/mountainash/Mixcloud-Play/releases/latest)
 
 ## Features
-1. Media controls - play/pause, next, back (back [requires Mixcloud _PREMIUM_ or _SELECT_](https://help.mixcloud.com/hc/en-us/articles/360004054059))
+1. Media controls: ⏪ ⏯️ ⏩ (⏪ [requires Mixcloud _PREMIUM_ or _SELECT_](https://help.mixcloud.com/hc/en-us/articles/360004054059))
 2. Menu bar track title
 3. Song notifications
-4. Modern desktop look
-5. Last.fm [Scrobbing](https://www.last.fm/about/trackmymusic) (_comming soon_)
+5. Last.fm [Scrobbing](https://www.last.fm/about/trackmymusic) ([_coming soon_](https://github.com/mountainash/Mixcloud-Play/projects/1))
 
 ## Enable Media Controls
 
