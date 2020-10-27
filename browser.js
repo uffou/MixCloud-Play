@@ -17,13 +17,15 @@ function concatEndpoints(endpoints) {
 
 var is_playing = false;
 
+// The web-scrobbler project can help with these selectors when MixCloud change the DOM
+// https://github.com/web-scrobbler/web-scrobbler/blob/master/src/connectors/mixcloud.js
 const DomHooks = {
 	playbutton: '[class*=PlayButton__PlayerControl]',
 	seekbutton: '[aria-label="Seek forwards"]',
 	backbutton: '[aria-label="Seek backwards"]',
-	showtitle: '[class*=RebrandPlayerControls__ShowTitle]',
-	trackartist: '[class*=RebrandPlayerSliderComponent__Artist]',
-	tracktitle: '[class*=RebrandPlayerSliderComponent__Track-]'
+	showtitle: '[class*=PlayerControls__ShowTitle]',
+	trackartist: '[class*=PlayerSliderComponent__Artist]',
+	tracktitle: '[class*=PlayerSliderComponent__Track-]'
 };
 
 const Endpoints = concatEndpoints({
