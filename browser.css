@@ -1,6 +1,10 @@
 ::selection {
 	background-color: transparent;
 }
+input::selection,
+textarea::selection {
+	background-color: #643e9b57;
+}
 .ad-header-wrapper,
 div[class^="Warnings__Container"],
 div[class^="RebrandHeader__"],
