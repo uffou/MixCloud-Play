@@ -1,14 +1,5 @@
 {
 	"javascript.validate.enable": true,
-	"eslint.options": {
-		"useEslintrc": false,
-		"parserOptions": {
-			"ecmaVersion": 6
-		},
-		"env": {
-			"es6": true
-		}
-	},
 	"workbench.colorCustomizations": {
 		"activityBar.background": "#1e2337",
 		"activityBar.activeBackground": "#5937b3",
