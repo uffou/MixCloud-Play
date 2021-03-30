@@ -1,5 +1,4 @@
 const { app, BrowserWindow } = require('electron');
-const { autoUpdater } = require('electron-updater');
 const appName = app.getName();
 
 function sendAction(action) {
@@ -14,10 +13,6 @@ const template = [
 		submenu: [{
 				label: `About ${appName}`,
 				role: 'about'
-			},
-			{
-				label: 'Check for Updates...',
-				click: () => autoUpdater.checkForUpdatesAndNotify()
 			},
 			{ type: 'separator' },
 			{
