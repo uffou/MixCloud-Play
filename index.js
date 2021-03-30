@@ -13,10 +13,10 @@ const { autoUpdater } = require('electron-updater');
 const path = require('path');
 const menuTemplate = require('./menu.js');
 const menu = Menu.buildFromTemplate(menuTemplate);
+const contextMenu = require('electron-context-menu');
 const fs = require('fs');
 const Config = require('electron-config');
 const config = new Config();
-
 
 const BASE_URL = 'https://www.mixcloud.com/';
 const DEBUG = process.env.ELECTRON_DEBUG || false;
@@ -29,7 +29,7 @@ let page;
 let isQuitting = false;
 
 let tray = null;
-let contextMenu = null;
+let trayContextMenu = null;
 var _isPlaying = false;
 
 const isRunning = app.requestSingleInstanceLock();
@@ -56,11 +56,11 @@ const initTray = () => {
 	if (!tray) {
 		tray = new Tray(path.join(__dirname, './static/logoTemplate.png'));
 		tray.on('click', togglePlay);
-		tray.on('right-click', displayContextMenu);
+		tray.on('right-click', displayTrayContextMenu);
 		tray.on('double-click', toggleWindow);
 	}
 
-	contextMenu = Menu.buildFromTemplate([
+	trayContextMenu = Menu.buildFromTemplate([
 		{
 			label: 'Play/Pause',
 			click: () => { togglePlay() }
@@ -72,8 +72,8 @@ const initTray = () => {
 	]);
 };
 
-function displayContextMenu() {
-	tray.popUpContextMenu(contextMenu);
+function displayTrayContextMenu() {
+	tray.popUpContextMenu(trayContextMenu);
 }
 
 app.on('activate', () => { win.show() });
@@ -81,6 +81,8 @@ app.on('before-quit', () => isQuitting = true);
 
 app.on('ready', () => {
 	initTray();
+	contextMenu();
+
 	Menu.setApplicationMenu(menu);
 
 	autoUpdater.checkForUpdatesAndNotify();
@@ -101,7 +103,8 @@ app.on('ready', () => {
 			nodeIntegration: true, //TODO turn this off
 			preload: path.join(__dirname, 'browser.js'),
 			plugins: true,
-			partition: 'persist:mixcloud'
+			partition: 'persist:mixcloud',
+			spellcheck: true
 		}
 	};
 	Object.assign(opts, config.get('winBounds'));

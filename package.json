@@ -1,7 +1,7 @@
 {
 	"name": "mixcloud-play",
 	"productName": "Mixcloud Play",
-	"version": "0.11.6",
+	"version": "0.13.0",
 	"description": "The Mixcloud desktop client",
 	"keywords": [
 		"music",
@@ -43,12 +43,13 @@
 	},
 	"dependencies": {
 		"electron-config": "2.0.0",
-		"electron-updater": "4.2.5",
-		"source-map-support": "0.5.16"
+		"electron-context-menu": "2.3.0",
+		"electron-updater": "4.3.5",
+		"source-map-support": "0.5.19"
 	},
 	"devDependencies": {
-		"electron": "3.1.13",
-		"electron-builder": "22.4.1"
+		"electron": "4.2.12",
+		"electron-builder": "22.9.1"
 	},
 	"build": {
 		"appId": "com.codemotionapps.mixcloud",
