@@ -1,5 +1,7 @@
-Mixcloud Play
-=====
+# Mixcloud Play
+
+> Application wrapper for Mixcloud
+
 Mixcloud Play is the missing desktop experience for [Mixcloud.com](https://www.mixcloud.com/) with support for media controls and showing current track in menu bar. Enjoy listening to hours of new music...
 
 ## [Download for Mac](https://github.com/mountainash/Mixcloud-Play/releases/latest)
@@ -50,7 +52,6 @@ docker-compose run --rm mixcloud-play {any command here}
 Built app will output to `./dist/mac/Mixcloud Play.app`
 
 ### Auto Update Publishing (GitHub)
-
 Publish app updates is set-up as per the [GithubOptions](https://www.electron.build/configuration/publish#githuboptions) for Electron Build's [Auto Update](https://www.electron.build/auto-update).
 
 1. Update the app version number in both `package*.json` files.
