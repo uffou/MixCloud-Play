@@ -1,4 +1,4 @@
-const { ipcRenderer, webFrame, shell } = require('electron');
+const { ipcRenderer } = require('electron');
 
 const webview = document;
 const BASE_URL = 'https://www.mixcloud.com';
@@ -52,23 +52,12 @@ ipcRenderer.on('notificationClicked', (_, notificationIndex) => {
 	webview.send('notificationClicked', notificationIndex);
 });
 
-// Open all links in external browser
-webview.addEventListener('click', (e) => {
-	if (event.target.href) {
-		console.log(event.target.href);
-	}
-	if (event.target.tagName === 'A' && event.target.href.startsWith('http') && !event.target.href.includes(BASE_URL + '/')) {
-		event.preventDefault();
-		shell.openExternal(event.target.href);
-	}
-});
-
 if (DEBUG) {
 	webview.addEventListener('dom-ready', () => {
 		webview.openDevTools();
 	});
-	webview.addEventListener('console-message', (e) => {
-		console.log('Guest page logged a message:', e.message)
+	webview.addEventListener('console-message', (event) => {
+		console.log('Guest page logged a message:', event.message)
 	});
 }
 
@@ -108,10 +97,6 @@ Object.defineProperties(NotificationDecorated, {
 });
 
 window.Notification = NotificationDecorated;
-// #endregion
-
-// #region Custom notification sound
-webFrame.registerURLSchemeAsBypassingCSP('file');
 
 const AudioOriginal = Audio;
 const beaconNotificationRegex = /beacon-notification\.(?:.*)$/;
@@ -219,7 +204,7 @@ webview.addEventListener('DOMContentLoaded', () => {
 	}, 2000);
 });
 
-webview.addEventListener('click', (e) => {
+webview.addEventListener('click', (event) => {
 	const playPause = webview.querySelector(DomHooks.playbutton);
 	const eventPath = event.path || (event.composedPath && event.composedPath()) || [];
 	const playPauseClicked = eventPath.find(path => path === playPause);

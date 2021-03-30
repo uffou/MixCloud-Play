@@ -99,8 +99,7 @@ app.on('ready', () => {
 		minHeight: 400,
 		acceptFirstMouse: true,
 		webPreferences: {
-			// nodeIntegration: false,
-			nodeIntegration: true, //TODO turn this off
+			nodeIntegration: false,
 			preload: path.join(__dirname, 'browser.js'),
 			plugins: true,
 			partition: 'persist:mixcloud',
@@ -115,9 +114,10 @@ app.on('ready', () => {
 
 	page = win.webContents;
 
+	// Open new browser window on external open
 	page.on('new-window', (event, url) => {
-		shell.openExternal(url);
 		event.preventDefault();
+		shell.openExternal(url);
 	});
 
 	if (DEBUG) {
@@ -292,35 +292,3 @@ function togglePlay() {
 	console.log('Toggle Play:', _isPlaying);
 	return _isPlaying;
 }
-
-/* Auto Update menu */
-autoUpdater.on('checking-for-update', () => {
-	const msg = 'Checking for update...';
-	console.log(msg);
-	page.send('notify', msg);
-});
-autoUpdater.on('update-available', (info) => {
-	const msg = 'Update available.';
-	console.log(msg);
-	page.send('notify', msg);
-});
-autoUpdater.on('update-not-available', (info) => {
-	const msg = 'Update not available.';
-	console.log(msg);
-	page.send('notify', msg);
-});
-autoUpdater.on('error', (err) => {
-	const msg = 'Error in auto-updater. ' + err;
-	console.log(msg);
-	page.send('notify', msg);
-});
-autoUpdater.on('download-progress', (progressObj) => {
-	const msg = 'Downloaded ' + progressObj.percent + '%';
-	console.log(msg);
-	page.send('notify', msg);
-});
-autoUpdater.on('update-downloaded', (info) => {
-	const msg = 'Update downloaded. Restart to update';
-	console.log(msg);
-	page.send('notify', msg);
-});
