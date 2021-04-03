@@ -7,8 +7,9 @@ textarea::selection {
 }
 .ad-header-wrapper,
 div[class^="Warnings__Container"],
-div[class^="RebrandHeader__"],
-.sidebar-small {
+div[class^="Header__"]::before,
+.sidebar-small,
+.profile-new-design-header {
 	-webkit-app-region: drag;
 }
 input,

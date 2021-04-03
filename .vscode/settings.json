@@ -18,5 +18,9 @@
 		"statusBar.border": "#586573",
 		"titleBar.border": "#586573"
 	},
-	"peacock.color": "#5937b3"
+	"peacock.color": "#5937b3",
+	"peacock.affectAccentBorders": true,
+	"peacock.affectDebuggingStatusBar": true,
+	"peacock.affectStatusAndTitleBorders": true,
+	"peacock.affectTabActiveBorder": true
 }
