@@ -1,4 +1,5 @@
-const { ipcRenderer, webFrame, shell } = require('electron');
+const { ipcRenderer } = require('electron');
+const keyStore = require('./src/keystore');
 
 const webview = document;
 const BASE_URL = 'https://www.mixcloud.com';
@@ -25,7 +26,11 @@ const DomHooks = {
 	backbutton: '[aria-label="Seek backwards"]',
 	showtitle: '[class*=PlayerControls__ShowTitle]',
 	trackartist: '[class*=PlayerSliderComponent__Artist]',
-	tracktitle: '[class*=PlayerSliderComponent__Track-]'
+	tracktitle: '[class*=PlayerSliderComponent__Track-]',
+	loginform: 'form[name=login]',
+	loginbutton: 'button',
+	usernameinput: 'input[name=email]',
+	passwordinput: 'input[type=password]'
 };
 
 const Endpoints = concatEndpoints({
@@ -34,7 +39,7 @@ const Endpoints = concatEndpoints({
 });
 
 // Set Window Title
-webview.addEventListener('page-title-updated', ({ title }) => {
+webview.addEventListener('page-title-updated', ({title}) => {
 	webview.title = `${title} | Mixcloud Play`;
 });
 
@@ -48,33 +53,29 @@ ipcRenderer.on('goToNewShows', () => {
 	webview.location = Endpoints.NEWSHOWS;
 });
 
-ipcRenderer.on('notificationClicked', (_, notificationIndex) => {
-	webview.send('notificationClicked', notificationIndex);
+ipcRenderer.on('logOut', async () => {
+	console.log('ipcRenderer: logOut');
+
+	keyStore.Logout();
 });
 
-// Open all links in external browser
-webview.addEventListener('click', (e) => {
-	if (event.target.href) {
-		console.log(event.target.href);
-	}
-	if (event.target.tagName === 'A' && event.target.href.startsWith('http') && !event.target.href.includes(BASE_URL + '/')) {
-		event.preventDefault();
-		shell.openExternal(event.target.href);
-	}
+ipcRenderer.on('notificationClicked', (_, notificationIndex) => {
+	webview.send('notificationClicked', notificationIndex);
 });
 
 if (DEBUG) {
 	webview.addEventListener('dom-ready', () => {
 		webview.openDevTools();
 	});
-	webview.addEventListener('console-message', (e) => {
-		console.log('Guest page logged a message:', e.message)
+	webview.addEventListener('console-message', (event) => {
+		console.log('Guest page logged a message:', event.message)
 	});
 }
 
-// #region Notification
+/* Notifications */
 const notifications = [];
 const NotificationOriginal = Notification;
+
 function NotificationDecorated(title) {
 	const notification = {
 		_handleClick: [],
@@ -108,10 +109,6 @@ Object.defineProperties(NotificationDecorated, {
 });
 
 window.Notification = NotificationDecorated;
-// #endregion
-
-// #region Custom notification sound
-webFrame.registerURLSchemeAsBypassingCSP('file');
 
 const AudioOriginal = Audio;
 const beaconNotificationRegex = /beacon-notification\.(?:.*)$/;
@@ -215,11 +212,34 @@ webview.addEventListener('DOMContentLoaded', () => {
 				if (currentTitle !== '')
 					ipcRenderer.send('nowPlaying', currentTitle, currentArtist);
 			}
+		} else {
+			let loginform = webview.querySelector(DomHooks.loginform);
+
+			if (!loginform || loginform.dataset.listened) return; // only attach an event to the form once
+			loginform.dataset.listened = true;
+
+			console.log('login showing');
+			keyStore.Login(loginform); // try using saved login
+
+			// add a listener to the form to capture login details and store them
+			const loginbutton = loginform.querySelector(DomHooks.loginbutton);
+
+			loginbutton.addEventListener('click', () => {
+				let username = loginform.querySelector(DomHooks.usernameinput).value;
+				let password = loginform.querySelector(DomHooks.passwordinput).value;
+
+				if (username && password) {
+					// delete any exiting logins
+					keyStore.DeleteKeys();
+					// store the users details for auto-login next time
+					keyStore.AddKey(username, password);
+				}
+			});
 		}
 	}, 2000);
 });
 
-webview.addEventListener('click', (e) => {
+webview.addEventListener('click', (event) => {
 	const playPause = webview.querySelector(DomHooks.playbutton);
 	const eventPath = event.path || (event.composedPath && event.composedPath()) || [];
 	const playPauseClicked = eventPath.find(path => path === playPause);

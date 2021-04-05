@@ -1,0 +1,42 @@
+{
+	"root": true,
+	"env": {
+		"browser": true,
+		"node": true,
+		"commonjs": true,
+		"amd": true,
+		"es6": true
+	},
+	"globals": {
+		"none": "readonly"
+	},
+	"settings": {
+		"import/core-modules": [ "electron" ]
+	},
+	"parserOptions": {
+		"ecmaVersion": 2017,
+		"sourceType": "module"
+	},
+	"extends": "eslint:recommended",
+	"rules": {
+		"indent": ["error", "tab"],
+		"linebreak-style": ["error", "unix"],
+		"quotes": ["error", "single"],
+		"semi": ["error", "always"],
+		"eol-last": ["error", "never"],
+		"no-trailing-spaces": "error",
+		"one-var": "warn",
+		"eqeqeq": ["warn", "smart"],
+		"default-case-last": "warn",
+		"no-empty-function": "error",
+		"no-cond-assign": ["error", "always"],
+		"no-script-url": "error",
+		"no-self-compare": "warn",
+		"no-multi-spaces": "warn",
+		"func-call-spacing": ["error", "never"],
+		"array-bracket-newline": "warn",
+		"keyword-spacing": ["error", { "before": true, "after": true }],
+		"space-before-function-paren": ["error", "never"],
+		"array-bracket-spacing": "warn"
+	}
+}

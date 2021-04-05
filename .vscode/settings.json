@@ -1,14 +1,5 @@
 {
 	"javascript.validate.enable": true,
-	"eslint.options": {
-		"useEslintrc": false,
-		"parserOptions": {
-			"ecmaVersion": 6
-		},
-		"env": {
-			"es6": true
-		}
-	},
 	"workbench.colorCustomizations": {
 		"activityBar.background": "#1e2337",
 		"activityBar.activeBackground": "#5937b3",
@@ -27,5 +18,9 @@
 		"statusBar.border": "#586573",
 		"titleBar.border": "#586573"
 	},
-	"peacock.color": "#5937b3"
+	"peacock.color": "#5937b3",
+	"peacock.affectAccentBorders": true,
+	"peacock.affectDebuggingStatusBar": true,
+	"peacock.affectStatusAndTitleBorders": true,
+	"peacock.affectTabActiveBorder": true
 }
