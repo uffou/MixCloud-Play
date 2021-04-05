@@ -1,4 +1,5 @@
 const { ipcRenderer } = require('electron');
+const keyStore = require('./src/keystore');
 
 const webview = document;
 const BASE_URL = 'https://www.mixcloud.com';
@@ -25,7 +26,11 @@ const DomHooks = {
 	backbutton: '[aria-label="Seek backwards"]',
 	showtitle: '[class*=PlayerControls__ShowTitle]',
 	trackartist: '[class*=PlayerSliderComponent__Artist]',
-	tracktitle: '[class*=PlayerSliderComponent__Track-]'
+	tracktitle: '[class*=PlayerSliderComponent__Track-]',
+	loginform: 'form[name=login]',
+	loginbutton: 'button',
+	usernameinput: 'input[name=email]',
+	passwordinput: 'input[type=password]'
 };
 
 const Endpoints = concatEndpoints({
@@ -34,7 +39,7 @@ const Endpoints = concatEndpoints({
 });
 
 // Set Window Title
-webview.addEventListener('page-title-updated', ({ title }) => {
+webview.addEventListener('page-title-updated', ({title}) => {
 	webview.title = `${title} | Mixcloud Play`;
 });
 
@@ -46,6 +51,12 @@ ipcRenderer.on('goToDashboard', () => {
 ipcRenderer.on('goToNewShows', () => {
 	console.log('ipcRenderer: goToNewShows');
 	webview.location = Endpoints.NEWSHOWS;
+});
+
+ipcRenderer.on('logOut', async () => {
+	console.log('ipcRenderer: logOut');
+
+	keyStore.Logout();
 });
 
 ipcRenderer.on('notificationClicked', (_, notificationIndex) => {
@@ -61,9 +72,10 @@ if (DEBUG) {
 	});
 }
 
-// #region Notification
+/* Notifications */
 const notifications = [];
 const NotificationOriginal = Notification;
+
 function NotificationDecorated(title) {
 	const notification = {
 		_handleClick: [],
@@ -200,6 +212,29 @@ webview.addEventListener('DOMContentLoaded', () => {
 				if (currentTitle !== '')
 					ipcRenderer.send('nowPlaying', currentTitle, currentArtist);
 			}
+		} else {
+			let loginform = webview.querySelector(DomHooks.loginform);
+
+			if (!loginform || loginform.dataset.listened) return; // only attach an event to the form once
+			loginform.dataset.listened = true;
+
+			console.log('login showing');
+			keyStore.Login(loginform); // try using saved login
+
+			// add a listener to the form to capture login details and store them
+			const loginbutton = loginform.querySelector(DomHooks.loginbutton);
+
+			loginbutton.addEventListener('click', () => {
+				let username = loginform.querySelector(DomHooks.usernameinput).value;
+				let password = loginform.querySelector(DomHooks.passwordinput).value;
+
+				if (username && password) {
+					// delete any exiting logins
+					keyStore.DeleteKeys();
+					// store the users details for auto-login next time
+					keyStore.AddKey(username, password);
+				}
+			});
 		}
 	}, 2000);
 });

@@ -1,12 +1,12 @@
 const {
-    app,
-    BrowserWindow,
-    globalShortcut,
-    ipcMain,
-    Menu,
-    Notification,
-    Tray,
-    shell
+	app,
+	BrowserWindow,
+	globalShortcut,
+	ipcMain,
+	Menu,
+	Notification,
+	Tray,
+	shell
 } = require('electron');
 
 const { autoUpdater } = require('electron-updater');
@@ -131,6 +131,7 @@ app.on('ready', () => {
 
 	page.on('dom-ready', () => {
 		page.insertCSS(fs.readFileSync(path.join(__dirname, 'browser.css'), 'utf8'));
+		page.insertCSS(fs.readFileSync(path.join(__dirname, 'src/notie.css'), 'utf8'));
 		win.show();
 	});
 
@@ -149,52 +150,52 @@ app.on('ready', () => {
 		}
 	});
 
-    // mainWindow.on('focus', () => {
-    //     // app.dock.setBadge('');
-    // });
+	// mainWindow.on('focus', () => {
+	//     // app.dock.setBadge('');
+	// });
 
-    // Load our media keys
+	// Load our media keys
 	// Originally copied from https://gist.github.com/twolfson/0a03820e27583cc9ad6e
 	// Docs: https://www.electronjs.org/docs/api/global-shortcut
 	// Electron and launching app (Terminal or VSCode) need to be approved: https://developer.apple.com/library/archive/documentation/Accessibility/Conceptual/AccessibilityMacOSX/OSXAXTestingApps.html
-    var registered = globalShortcut.register('MediaNextTrack', () => {
-        console.log('MediaNextTrack pressed');
-        page.send('seek');
-    });
-    if (!registered) {
-        console.log('MediaNextTrack registration failed');
-    } else {
-        console.log('MediaNextTrack registration bound!');
-    }
+	var registered = globalShortcut.register('MediaNextTrack', () => {
+		console.log('MediaNextTrack pressed');
+		page.send('seek');
+	});
+	if (!registered) {
+		console.log('MediaNextTrack registration failed');
+	} else {
+		console.log('MediaNextTrack registration bound!');
+	}
 
-    var registered = globalShortcut.register('MediaPlayPause', () => {
-        console.log('MediaPlayPause pressed', _isPlaying);
+	var registered = globalShortcut.register('MediaPlayPause', () => {
+		console.log('MediaPlayPause pressed', _isPlaying);
 		togglePlay();
-    });
-    if (!registered) {
-        console.log('MediaPlayPause registration failed');
-    } else {
-        console.log('MediaPlayPause registration bound!');
-    }
+	});
+	if (!registered) {
+		console.log('MediaPlayPause registration failed');
+	} else {
+		console.log('MediaPlayPause registration bound!');
+	}
 
-    var registered = globalShortcut.register('MediaPreviousTrack', () => {
-        console.log('MediaPreviousTrack pressed');
-        page.send('back');
-    });
-    if (!registered) {
-        console.log('MediaPreviousTrack registration failed');
-    } else {
-        console.log('MediaPreviousTrack registration bound!');
-    }
+	var registered = globalShortcut.register('MediaPreviousTrack', () => {
+		console.log('MediaPreviousTrack pressed');
+		page.send('back');
+	});
+	if (!registered) {
+		console.log('MediaPreviousTrack registration failed');
+	} else {
+		console.log('MediaPreviousTrack registration bound!');
+	}
 
-    var registered = globalShortcut.register('MediaStop', () => {
-        console.log('MediaStop pressed');
-    });
-    if (!registered) {
-        console.log('MediaStop registration failed');
-    } else {
-        console.log('MediaStop registration bound!');
-    }
+	var registered = globalShortcut.register('MediaStop', () => {
+		console.log('MediaStop pressed');
+	});
+	if (!registered) {
+		console.log('MediaStop registration failed');
+	} else {
+		console.log('MediaStop registration bound!');
+	}
 });
 
 app.on('will-quit', () => {
@@ -203,51 +204,51 @@ app.on('will-quit', () => {
 });
 
 ipcMain.on('notification', (_event, notificationIndex, subtitle) => {
-    if (win.isFocused()) return;
+	if (win.isFocused()) return;
 
 	// app.dock.setBadge("!");
 
-    const notification = new Notification({
-        title: 'Mixcloud Play',
-        subtitle,
-        silent: true
-    });
-    notification.on('click', (e) => {
+	const notification = new Notification({
+		title: 'Mixcloud Play',
+		subtitle,
+		silent: true
+	});
+	notification.on('click', (e) => {
 		console.log('notificationClicked - click', e);
-        page.send('notificationClicked', e);
-        win.show();
-    });
-    notification.show();
-    setTimeout(() => {
-        notification.close();
-    }, 7000);
+		page.send('notificationClicked', e);
+		win.show();
+	});
+	notification.show();
+	setTimeout(() => {
+		notification.close();
+	}, 7000);
 });
 
 ipcMain.on('handlePause', (_, track) => {
-    app.dock.setBadge('||'); // kind of looks like a "pause" symbol
+	app.dock.setBadge('||'); // kind of looks like a "pause" symbol
 
 	tray.setTitle(track + ' (paused)');
 
 	page.send('notify', track);
-    const notification = new Notification({
-        title: 'Show Paused',
-        subtitle: track,
-        silent: true
-    });
+	const notification = new Notification({
+		title: 'Show Paused',
+		subtitle: track,
+		silent: true
+	});
 	notification.on('click', (e) => {
 		console.log('notificationClicked - pause', e);
-        page.send('notificationClicked', e);
-        win.show();
-    });
-    notification.show();
-    setTimeout(() => {
-        notification.close();
-    }, 7000);
+		page.send('notificationClicked', e);
+		win.show();
+	});
+	notification.show();
+	setTimeout(() => {
+		notification.close();
+	}, 7000);
 });
 
 ipcMain.on('nowPlaying', (_, title, subtitle) => {
 	console.log(`${title} ${subtitle}`);
-    app.dock.setBadge('');
+	app.dock.setBadge('');
 
 	const notification = new Notification({
 		title: title,
@@ -266,24 +267,24 @@ ipcMain.on('nowPlaying', (_, title, subtitle) => {
 });
 
 ipcMain.on('handlePlay', (_, track) => {
-    app.dock.setBadge('');
+	app.dock.setBadge('');
 
-    tray.setTitle(track)
+	tray.setTitle(track)
 
 	const notification = new Notification({
-        title: 'Playing...',
-        subtitle: track,
-        silent: true
-    });
-    notification.on('click', (e) => {
+		title: 'Playing...',
+		subtitle: track,
+		silent: true
+	});
+	notification.on('click', (e) => {
 		console.log('notificationClicked - handlePlay', e);
-        page.send('notificationClicked', e);
-        win.show();
-    });
-    notification.show();
-    setTimeout(() => {
-        notification.close();
-    }, 7000);
+		page.send('notificationClicked', e);
+		win.show();
+	});
+	notification.show();
+	setTimeout(() => {
+		notification.close();
+	}, 7000);
 });
 
 function togglePlay() {

@@ -14,6 +14,10 @@ const template = [
 				label: `About ${appName}`,
 				role: 'about'
 			},
+			{
+				label: 'Logout',
+				click: () => sendAction('logOut')
+			},
 			{ type: 'separator' },
 			{
 				role: 'services',

@@ -1,7 +1,7 @@
 {
 	"name": "mixcloud-play",
 	"productName": "Mixcloud Play",
-	"version": "0.15.0",
+	"version": "0.16.0",
 	"description": "The Mixcloud desktop client",
 	"keywords": [
 		"music",
@@ -45,6 +45,8 @@
 		"electron-config": "2.0.0",
 		"electron-context-menu": "2.5.0",
 		"electron-updater": "4.3.8",
+		"keytar": "^7.6.0",
+		"notie": "^4.3.1",
 		"source-map-support": "0.5.19"
 	},
 	"devDependencies": {

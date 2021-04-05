@@ -1,0 +1,59 @@
+/* Customised. Original from https://unpkg.com/notie@4.3.1/dist/notie.css */
+.notie-container {
+    position: fixed;
+    z-index: 2147483647;
+    left: 0;
+    width: 100%;
+    height: auto;
+    text-align: center;
+    font-size: 1.4rem;
+    box-sizing: border-box;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, .5);
+}
+
+@media screen and (max-width: 900px) {
+    .notie-container {
+        font-size: 1.2rem;
+    }
+}
+
+@media screen and (max-width: 750px) {
+    .notie-container {
+        font-size: 1rem;
+    }
+}
+
+.notie-background-success {
+    background: #5937b3;
+}
+
+.notie-background-warning {
+    background: #057d9c;
+}
+
+.notie-background-error {
+    background: #d63a4f;
+}
+
+.notie-background-info,
+.notie-background-neutral {
+    background: dimgrey;
+}
+
+.notie-background-overlay {
+    background: #FFF;
+}
+
+.notie-textbox {
+    color: #FFF;
+    padding: 20px;
+}
+
+.notie-textbox-inner {
+    margin: 0 auto;
+    max-width: 900px;
+}
+
+.notie-alert {
+    cursor: pointer;
+}

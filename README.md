@@ -12,6 +12,7 @@ Mixcloud Play is the missing desktop experience for [Mixcloud.com](https://www.m
 1. Media controls: ⏪ ⏯️ ⏩ (⏪ [requires Mixcloud _PREMIUM_ or _SELECT_](https://help.mixcloud.com/hc/en-us/articles/360004054059))
 2. Menu bar track title
 3. Song notifications
+4. Stores login in local keystore/keychain
 5. Last.fm [Scrobbing](https://www.last.fm/about/trackmymusic) ([_coming soon_](https://github.com/mountainash/Mixcloud-Play/projects/1))
 
 ## Enable Media Controls
