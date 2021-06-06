@@ -1,7 +1,7 @@
 {
 	"name": "mixcloud-play",
 	"productName": "Mixcloud Play",
-	"version": "0.16.0",
+	"version": "0.17.0",
 	"description": "The Mixcloud desktop client",
 	"keywords": [
 		"music",
@@ -39,24 +39,25 @@
 		"build:dir": "electron-builder --mac --dir",
 		"build:debug": "ELECTRON_DEBUG=true npm run build:dir",
 		"publish:draft": "EP_DRAFT=true electron-builder build",
-		"publish": "electron-builder build -p always"
+		"publish": "electron-builder build --publish always"
 	},
 	"dependencies": {
 		"electron-config": "2.0.0",
-		"electron-context-menu": "2.5.0",
+		"electron-context-menu": "3.1.0",
 		"electron-updater": "4.3.9",
-		"keytar": "7.6.0",
-		"notie": "4.3.1",
-		"source-map-support": "0.5.19"
+		"keytar": "7.7.0",
+		"notie": "4.3.1"
 	},
 	"devDependencies": {
 		"electron": "13.1.1",
 		"electron-builder": "22.10.5"
 	},
 	"build": {
-		"appId": "com.codemotionapps.mixcloud",
-		"copyright": "Copyright © 2019 Codemotion Ltd.",
+		"appId": "BSFV28T84F.com.mountainash.mixcloud-play",
+		"copyright": "Copyleft 2021",
 		"productName": "Mixcloud Play",
+		"remoteBuild": false,
+		"forceCodeSigning": true,
 		"mac": {
 			"category": "public.app-category.music",
 			"icon": "Mixcloud.icns"

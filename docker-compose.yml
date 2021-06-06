@@ -2,7 +2,7 @@ version: "3"
 
 services:
   mixcloud-play:
-    image: electronuserland/builder:12-11.19
+    image: electronuserland/builder:14-05.21
     volumes:
       - .:/project
       - ~/.cache/electron:/root/.cache/electron
