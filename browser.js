@@ -68,7 +68,7 @@ if (DEBUG) {
 		webview.openDevTools();
 	});
 	webview.addEventListener('console-message', (event) => {
-		console.log('Guest page logged a message:', event.message)
+		console.log('Guest page logged a message:', event.message);
 	});
 }
 
@@ -224,15 +224,15 @@ webview.addEventListener('DOMContentLoaded', () => {
 			// add a listener to the form to capture login details and store them
 			const loginbutton = loginform.querySelector(DomHooks.loginbutton);
 
-			loginbutton.addEventListener('click', () => {
+			loginbutton.addEventListener('click', async () => {
 				let username = loginform.querySelector(DomHooks.usernameinput).value;
 				let password = loginform.querySelector(DomHooks.passwordinput).value;
 
 				if (username && password) {
 					// delete any exiting logins
-					keyStore.DeleteKeys();
+					await keyStore.DeleteKeys();
 					// store the users details for auto-login next time
-					keyStore.AddKey(username, password);
+					await keyStore.AddKey(username, password);
 				}
 			});
 		}
