@@ -50,7 +50,7 @@ app.on('second-instance', () => {
 const toggleWindow = () => {
 	win.show();
 	win.focus();
-}
+};
 
 const initTray = () => {
 	if (!tray) {
@@ -74,6 +74,23 @@ const initTray = () => {
 
 function displayTrayContextMenu() {
 	tray.popUpContextMenu(trayContextMenu);
+}
+
+function basicURL(url) {
+	if (typeof url !== 'string') return false;
+
+	const parsed = new URL(url);
+	if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:')
+		return false;
+
+	return true;
+}
+
+function isURLAllowed(url) {
+	return [
+		/^https:\/\/www\.facebook\.com\/.*/i,
+		/^https:\/\/www\.mixcloud\.com\/.*/i
+	].some((re) => url.match(re));
 }
 
 app.on('activate', () => { win.show() });
@@ -115,9 +132,26 @@ app.on('ready', () => {
 	page = win.webContents;
 
 	// Open new browser window on external open
-	page.on('new-window', (event, url) => {
-		event.preventDefault();
-		shell.openExternal(url);
+	page.setWindowOpenHandler(({url}) => {
+		if (url.startsWith('https://www.facebook.com/')) return { action: 'allow' };
+		else if (basicURL(url)) shell.openExternal(url);
+		return { action: 'deny' };
+	});
+
+	page.on('will-navigate', (e, url) => {
+		if (basicURL(url) && !isURLAllowed(url)) {
+			e.preventDefault();
+			shell.openExternal(url);
+		}
+	});
+
+	page.on('will-redirect', (e, url) => {
+		// `will-navigate` doesn't catch redirects
+		if (basicURL(url) && !isURLAllowed(url)) {
+			e.preventDefault();
+			win.loadURL(BASE_URL);
+			shell.openExternal(url);
+		}
 	});
 
 	if (DEBUG) {
@@ -127,7 +161,7 @@ app.on('ready', () => {
 		page.on('did-frame-finish-load', () => {
 			page.openDevTools();
 		});
-	};
+	}
 
 	page.on('dom-ready', () => {
 		page.insertCSS(fs.readFileSync(path.join(__dirname, 'browser.css'), 'utf8'));
@@ -168,7 +202,7 @@ app.on('ready', () => {
 		console.log('MediaNextTrack registration bound!');
 	}
 
-	var registered = globalShortcut.register('MediaPlayPause', () => {
+	registered = globalShortcut.register('MediaPlayPause', () => {
 		console.log('MediaPlayPause pressed', _isPlaying);
 		togglePlay();
 	});
@@ -178,7 +212,7 @@ app.on('ready', () => {
 		console.log('MediaPlayPause registration bound!');
 	}
 
-	var registered = globalShortcut.register('MediaPreviousTrack', () => {
+	registered = globalShortcut.register('MediaPreviousTrack', () => {
 		console.log('MediaPreviousTrack pressed');
 		page.send('back');
 	});
@@ -188,7 +222,7 @@ app.on('ready', () => {
 		console.log('MediaPreviousTrack registration bound!');
 	}
 
-	var registered = globalShortcut.register('MediaStop', () => {
+	registered = globalShortcut.register('MediaStop', () => {
 		console.log('MediaStop pressed');
 	});
 	if (!registered) {
@@ -269,7 +303,7 @@ ipcMain.on('nowPlaying', (_, title, subtitle) => {
 ipcMain.on('handlePlay', (_, track) => {
 	app.dock.setBadge('');
 
-	tray.setTitle(track)
+	tray.setTitle(track);
 
 	const notification = new Notification({
 		title: 'Playing...',
