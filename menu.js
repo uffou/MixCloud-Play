@@ -10,7 +10,8 @@ function sendAction(action) {
 const template = [
 	{
 		label: appName,
-		submenu: [{
+		submenu: [
+			{
 				label: `About ${appName}`,
 				role: 'about'
 			},
@@ -78,7 +79,7 @@ const template = [
 	},
 	{
 		role: 'window',
-        submenu: [
+		submenu: [
 			{ role: 'close' },
 			{ role: 'minimize' },
 			{ role: 'zoom' },

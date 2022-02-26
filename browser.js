@@ -53,7 +53,7 @@ ipcRenderer.on('goToNewShows', () => {
 	webview.location = Endpoints.NEWSHOWS;
 });
 
-ipcRenderer.on('logOut', async () => {
+ipcRenderer.on('logOut', async() => {
 	console.log('ipcRenderer: logOut');
 
 	keyStore.Logout();
@@ -79,7 +79,7 @@ const NotificationOriginal = Notification;
 function NotificationDecorated(title) {
 	const notification = {
 		_handleClick: [],
-		close() {},
+		close,
 		addEventListener(type, callback) {
 			if (type !== 'click') return;
 
@@ -90,7 +90,7 @@ function NotificationDecorated(title) {
 				callback.call(this);
 			}
 		}
-	}
+	};
 
 	ipcRenderer.send('notification', notifications.push(notification) - 1, title);
 	return notification;
@@ -122,14 +122,14 @@ function createObserverCallback(tagName, callback) {
 				}
 			}
 		}
-	}
+	};
 }
 
 ipcRenderer.on('notificationClicked', (_, notificationIndex) => {
 	const originalOpen = window.open;
 	window.open = (url) => {
 		window.location = url;
-	}
+	};
 	notifications[notificationIndex].click();
 	window.open = originalOpen;
 });
@@ -224,7 +224,7 @@ webview.addEventListener('DOMContentLoaded', () => {
 			// add a listener to the form to capture login details and store them
 			const loginbutton = loginform.querySelector(DomHooks.loginbutton);
 
-			loginbutton.addEventListener('click', async () => {
+			loginbutton.addEventListener('click', async() => {
 				let username = loginform.querySelector(DomHooks.usernameinput).value;
 				let password = loginform.querySelector(DomHooks.passwordinput).value;
 
@@ -247,7 +247,7 @@ webview.addEventListener('click', (event) => {
 	if (playPauseClicked) {
 		console.log(playPauseClicked);
 
-		const paused = playPauseClicked.getAttribute('aria-label') == 'Pause';
+		const paused = playPauseClicked.getAttribute('aria-label') === 'Pause';
 		is_playing = !paused;
 		console.log('Paused', paused);
 
