@@ -72,6 +72,10 @@ const template = [
 			// },
 			// { type: 'separator' },
 			{
+				label: 'Dashboard',
+				click: () => sendAction('goToDashboard')
+			},
+			{
 				label: 'New Shows',
 				click: () => sendAction('goToNewShows')
 			}
