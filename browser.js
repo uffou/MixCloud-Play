@@ -55,7 +55,6 @@ ipcRenderer.on('goToNewShows', () => {
 
 ipcRenderer.on('logOut', async() => {
 	console.log('ipcRenderer: logOut');
-
 	keyStore.Logout();
 });
 
@@ -109,21 +108,6 @@ Object.defineProperties(NotificationDecorated, {
 });
 
 window.Notification = NotificationDecorated;
-
-const AudioOriginal = Audio;
-const beaconNotificationRegex = /beacon-notification\.(?:.*)$/;
-
-function createObserverCallback(tagName, callback) {
-	return function(records) {
-		for (const record of records) {
-			for (const node of record.addedNodes) {
-				if (node.tagName === tagName) {
-					callback();
-				}
-			}
-		}
-	};
-}
 
 ipcRenderer.on('notificationClicked', (_, notificationIndex) => {
 	const originalOpen = window.open;
