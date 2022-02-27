@@ -15,8 +15,8 @@ const menuTemplate = require('./menu.js');
 const menu = Menu.buildFromTemplate(menuTemplate);
 const contextMenu = require('electron-context-menu');
 const fs = require('fs');
-const Config = require('electron-config');
-const config = new Config();
+const Store = require('electron-store');
+const config = new Store();
 
 const BASE_URL = 'https://www.mixcloud.com/';
 const DEBUG = process.env.ELECTRON_DEBUG || false;
