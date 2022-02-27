@@ -1,7 +1,7 @@
 {
 	"name": "mixcloud-play",
 	"productName": "Mixcloud Play",
-	"version": "0.18.4",
+	"version": "0.18.5",
 	"description": "The Mixcloud desktop client",
 	"keywords": [
 		"music",
@@ -43,18 +43,18 @@
 	},
 	"dependencies": {
 		"electron-store": "8.0.1",
-		"electron-context-menu": "3.1.1",
-		"electron-updater": "4.3.9",
-		"keytar": "7.7.0",
+		"electron-context-menu": "3.1.2",
+		"electron-updater": "4.6.5",
+		"keytar": "7.9.0",
 		"notie": "4.3.1"
 	},
 	"devDependencies": {
-		"electron": "15.3.0",
-		"electron-builder": "22.13.1"
+		"electron": "17.1.0",
+		"electron-builder": "22.14.13"
 	},
 	"build": {
 		"appId": "BSFV28T84F.com.mountainash.mixcloud-play",
-		"copyright": "Copyleft 2021",
+		"copyright": "Copyleft 2022",
 		"productName": "Mixcloud Play",
 		"remoteBuild": false,
 		"forceCodeSigning": true,
