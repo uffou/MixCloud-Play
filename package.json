@@ -38,7 +38,6 @@
 		"build": "electron-builder",
 		"build:dir": "electron-builder --mac --dir",
 		"build:debug": "ELECTRON_DEBUG=true npm run build:dir",
-		"publish:draft": "EP_DRAFT=true electron-builder build",
 		"publish": "electron-builder build --publish always"
 	},
 	"dependencies": {
@@ -53,14 +52,21 @@
 		"electron-builder": "22.14.13"
 	},
 	"build": {
-		"appId": "BSFV28T84F.com.mountainash.mixcloud-play",
+		"appId": "BSFV28T84F.com.mountainash.${name}",
 		"copyright": "Copyleft 2022",
 		"productName": "Mixcloud Play",
 		"remoteBuild": false,
 		"forceCodeSigning": true,
 		"mac": {
 			"category": "public.app-category.music",
-			"icon": "Mixcloud.icns"
+			"icon": "Mixcloud.icns",
+			"target": {
+				"target": "default",
+				"arch": [
+					"x64",
+					"arm64"
+				]
+			}
 		},
 		"publish": [
 			{
