@@ -118,6 +118,7 @@ app.on('ready', () => {
 		webPreferences: {
 			nodeIntegration: false,
 			preload: path.join(__dirname, 'browser.js'),
+			sandbox: false,
 			plugins: true,
 			partition: 'persist:mixcloud',
 			spellcheck: true
