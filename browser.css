@@ -16,8 +16,11 @@ input,
 textarea {
 	-webkit-app-region: no-drag !important;
 }
-.kZfKuO { /* Mixcloud Logo */
+div[class^="Header__HeaderSection"] { /* Mixcloud Logo */
 	padding-left: 60px !important;
+}
+div[class^="Header__HeaderSection"] a:focus-visible { /* Electron focuses the first link, and Mixcloud shows an ugly outline */
+	outline: 0;
 }
 .container-wide .sidebar-small nav {
 	padding-left: 70px !important;
@@ -28,7 +31,7 @@ textarea {
 }
 
 /* Temp Fix */
-.dvRTvd { /* Play button - moving up */
+span[class^="PlayButton__PlayButtonIcon"] { /* Play button - moving up */
 	line-height: 1;
 }
 
