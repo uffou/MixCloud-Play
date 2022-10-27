@@ -7,7 +7,7 @@ textarea::selection {
 }
 .ad-header-wrapper,
 div[class^="Warnings__Container"],
-div[class^="Header__"]::before,
+div[class^="Header__"],
 .sidebar-small,
 .profile-new-design-header {
 	-webkit-app-region: drag;
