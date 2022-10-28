@@ -26,11 +26,10 @@ if (DEBUG)
 
 let win = null;
 let page;
-let isQuitting = false;
 
 let tray = null;
 let trayContextMenu = null;
-var _isPlaying = false;
+var _isPlaying = true;
 
 const isRunning = app.requestSingleInstanceLock();
 app.allowRendererProcessReuse = true;
@@ -94,7 +93,11 @@ function isURLAllowed(url) {
 }
 
 app.on('activate', () => { win.show() });
-app.on('before-quit', () => isQuitting = true);
+
+app.on('before-quit', () => {
+	// save window size and position
+	config.set('winBounds', win.getBounds());
+});
 
 app.on('ready', () => {
 	initTray();
@@ -170,21 +173,6 @@ app.on('ready', () => {
 		win.show();
 	});
 
-	win.on('close', (e) => {
-		if (!isQuitting) {
-			e.preventDefault();
-
-			if (process.platform === 'darwin') {
-				app.hide();
-			} else {
-				win.hide();
-			}
-		} else {
-			// save window size and position
-			config.set('winBounds', win.getBounds());
-		}
-	});
-
 	// mainWindow.on('focus', () => {
 	//     // app.dock.setBadge('');
 	// });
@@ -231,11 +219,13 @@ app.on('ready', () => {
 	} else {
 		console.log('MediaStop registration bound!');
 	}
-});
 
-app.on('will-quit', () => {
-	// Unregister all shortcuts
-	globalShortcut.unregisterAll();
+	win.on('close', () => {
+		// Unregister all shortcuts
+		console.log('Unregistering all shortcuts');
+		globalShortcut.unregisterAll();
+		app.exit(); // Quit the app - even with sound playing (otherwise Electron won't quite, see #89)
+	});
 });
 
 ipcMain.on('notification', (_event, notificationIndex, subtitle) => {
