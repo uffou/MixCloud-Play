@@ -76,8 +76,8 @@ if (DEBUG) {
 	});
 }
 
-ipcRenderer.on('playPause', () => {
-	console.log('playPause');
+ipcRenderer.on('triggerPlayPause', () => {
+	console.log('triggerPlayPause');
 	const el_play = document.querySelector(DomHooks.playbutton);
 	if (el_play)
 		el_play.click();
@@ -170,10 +170,10 @@ webview.addEventListener('DOMContentLoaded', () => {
 });
 
 const checkPlayingState = () => {
-	const playPause = webview.querySelector(DomHooks.playbutton);
-	if (!playPause) return null;
+	const playPauseButton = webview.querySelector(DomHooks.playbutton);
+	if (!playPauseButton) return null;
 
-	const button_aria = playPause.getAttribute('aria-label') === 'Pause'; // when it's paused, the aria-label is 'Play'
+	const button_aria = playPauseButton.getAttribute('aria-label') === 'Pause'; // when it's paused, the aria-label is 'Play'
 	showInfo.isPlaying = button_aria; // set global var
 	console.log('isPlaying:', showInfo.isPlaying);
 };

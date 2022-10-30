@@ -29,7 +29,6 @@ let page;
 
 let tray = null;
 let trayContextMenu = null;
-var _isPlaying = true;
 
 const isRunning = app.requestSingleInstanceLock();
 app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
@@ -193,7 +192,7 @@ app.on('ready', () => {
 	}
 
 	registered = globalShortcut.register('MediaPlayPause', () => {
-		console.log('MediaPlayPause pressed', _isPlaying);
+		console.log('MediaPlayPause pressed');
 		togglePlay();
 	});
 	if (!registered) {
@@ -265,8 +264,5 @@ ipcMain.on('displayNotification', (_, showInfo) => {
 });
 
 function togglePlay() {
-	_isPlaying = !_isPlaying;
-	page.send('playPause');
-	console.log('Toggle Play:', _isPlaying);
-	return _isPlaying;
+	page.send('triggerPlayPause');
 }

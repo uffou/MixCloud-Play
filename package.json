@@ -1,7 +1,7 @@
 {
 	"name": "mixcloud-play",
 	"productName": "Mixcloud Play",
-	"version": "0.18.8",
+	"version": "0.19.0",
 	"description": "The Mixcloud desktop client",
 	"keywords": [
 		"music",
@@ -10,6 +10,7 @@
 		"mixcloud",
 		"wrapper",
 		"media keys",
+		"notifications",
 		"electron"
 	],
 	"author": {
