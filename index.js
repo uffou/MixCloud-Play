@@ -32,7 +32,6 @@ let trayContextMenu = null;
 var _isPlaying = true;
 
 const isRunning = app.requestSingleInstanceLock();
-app.allowRendererProcessReuse = true;
 app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
 
 if (!isRunning) {
