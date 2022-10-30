@@ -16,7 +16,15 @@ function concatEndpoints(endpoints) {
 	return endpoints;
 }
 
-var is_playing = false;
+// Object for storing the current show info
+const showInfo = {
+	isPlaying: false,
+	showName: '',
+	showOwner: '',
+	// showImage: '', // not in use
+	trackArtist: '',
+	trackTitle: '',
+};
 
 // The web-scrobbler project can help with these selectors when MixCloud change the DOM
 // https://github.com/web-scrobbler/web-scrobbler/blob/master/src/connectors/mixcloud.js
@@ -24,9 +32,10 @@ const DomHooks = {
 	playbutton: '[class*=PlayButton__PlayerControl]',
 	seekbutton: '[aria-label="Seek forwards"]',
 	backbutton: '[aria-label="Seek backwards"]',
-	showtitle: '[class*=PlayerControls__ShowTitle]',
-	trackartist: '[class*=PlayerSliderComponent__Artist]',
+	showname: '[class*=PlayerControls__ShowTitle]',
+	showowner: '[class*=PlayerControls__ShowOwnerName]',
 	tracktitle: '[class*=PlayerSliderComponent__Track-]',
+	trackartist: '[class*=PlayerSliderComponent__Artist]',
 	loginform: 'form[name=login]',
 	loginbutton: 'button',
 	usernameinput: 'input[name=email]',
@@ -58,10 +67,6 @@ ipcRenderer.on('logOut', async() => {
 	keyStore.Logout();
 });
 
-ipcRenderer.on('notificationClicked', (_, notificationIndex) => {
-	webview.send('notificationClicked', notificationIndex);
-});
-
 if (DEBUG) {
 	webview.addEventListener('dom-ready', () => {
 		webview.openDevTools();
@@ -70,53 +75,6 @@ if (DEBUG) {
 		console.log('Guest page logged a message:', event.message);
 	});
 }
-
-/* Notifications */
-const notifications = [];
-const NotificationOriginal = Notification;
-
-function NotificationDecorated(title) {
-	const notification = {
-		_handleClick: [],
-		close,
-		addEventListener(type, callback) {
-			if (type !== 'click') return;
-
-			this._handleClick.push(callback);
-		},
-		click() {
-			for (const callback of this._handleClick) {
-				callback.call(this);
-			}
-		}
-	};
-
-	ipcRenderer.send('notification', notifications.push(notification) - 1, title);
-	return notification;
-}
-
-Object.defineProperties(NotificationDecorated, {
-	permission: {
-		get() { return NotificationOriginal.permission }
-	},
-	maxActions: {
-		get() { return NotificationOriginal.maxActions }
-	},
-	requestPermission: {
-		get() { return NotificationOriginal.requestPermission }
-	}
-});
-
-window.Notification = NotificationDecorated;
-
-ipcRenderer.on('notificationClicked', (_, notificationIndex) => {
-	const originalOpen = window.open;
-	window.open = (url) => {
-		window.location = url;
-	};
-	notifications[notificationIndex].click();
-	window.open = originalOpen;
-});
 
 ipcRenderer.on('playPause', () => {
 	console.log('playPause');
@@ -139,35 +97,21 @@ ipcRenderer.on('back', () => {
 		el_back.click();
 });
 
-ipcRenderer.on('next', () => {
-	// TODO - get working
-	console.log('next');
-	const row = Array.from(document.getElementsByClassName('cloudcast-upnext-row'));
-	const nowPlaying = row.findIndex(song => song.classList.contains('now-playing'));
-	const children = Array.from(row[nowPlaying + 1].childNodes);
-	const image = children.find(child => child.classList.contains('cloudcast-row-image'));
-	if (image)
-		image.click();
-});
-
-ipcRenderer.on('notify', (text) => {
-	console.log('notify', text);
-	let node = document.createElement('div');
-
-	node.id = 'notify';
-	node.innerHTML = 'Notification: ' + JSON.stringify(text);
-
-	webview.body.appendChild(node);
-});
-
 webview.addEventListener('DOMContentLoaded', () => {
-	let currentTitle = '';
-	let currentArtist = '';
-
 	setInterval(() => {
-		if (is_playing) {
-			console.log('currentTrack:', currentTitle, 'currentArtist:', currentArtist);
+		console.log('showInfo:', showInfo);
 
+		// Check if the play state has changed (normally by media keys (as we only have events for the Mixcloud play button))
+		const current_state = showInfo.isPlaying;
+
+		checkPlayingState();
+
+		if (current_state !== showInfo.isPlaying) {
+			ipcRenderer.send('displayNotification', showInfo);
+			return;
+		}
+
+		if (showInfo.isPlaying) {
 			// get track artist and clean
 			let artistElement = webview.querySelector(DomHooks.trackartist);
 			if (!artistElement) return;
@@ -177,26 +121,28 @@ webview.addEventListener('DOMContentLoaded', () => {
 			artist = artist.replace(/[\u2014\u002d]\sbuy$/gi, '');
 			artist = artist.replace(/(by )/, '');
 
-			if (artist !== currentArtist) {
-				currentArtist = artist;
-				console.log('New Artist:', currentArtist);
+			if (artist !== showInfo.trackArtist) {
+				showInfo.trackArtist = artist;
+				console.log('New Artist:', artist);
 			}
 
 			// get track title and clean
 			const titleElement = webview.querySelector(DomHooks.tracktitle);
-			if (!titleElement) return;
+			if (!titleElement) return; // element doesn't exist if the show doesn't have a tracklist
 
 			let title = titleElement.innerText;
 			title = String(title);
 
-			if (title !== currentTitle) {
-				currentTitle = title;
-				console.log('New Track:', currentTitle);
+			if (title !== showInfo.trackTitle) {
+				console.log('New Track:', title);
+				showInfo.trackTitle = title;
 
-				if (currentTitle !== '')
-					ipcRenderer.send('nowPlaying', currentTitle, currentArtist);
+				if (title !== '')
+					ipcRenderer.send('displayNotification', showInfo);
 			}
 		} else {
+			// Login form prefill
+			// login will only show when not playing (so reduce checks/lookups)
 			let loginform = webview.querySelector(DomHooks.loginform);
 
 			if (!loginform || loginform.dataset.listened) return; // only attach an event to the form once
@@ -223,22 +169,26 @@ webview.addEventListener('DOMContentLoaded', () => {
 	}, 2000);
 });
 
-webview.addEventListener('click', (event) => {
+const checkPlayingState = () => {
 	const playPause = webview.querySelector(DomHooks.playbutton);
-	const eventPath = event.path || (event.composedPath && event.composedPath()) || [];
-	const playPauseClicked = eventPath.find(path => path === playPause);
+	if (!playPause) return null;
+
+	const button_aria = playPause.getAttribute('aria-label') === 'Pause'; // when it's paused, the aria-label is 'Play'
+	showInfo.isPlaying = button_aria; // set global var
+	console.log('isPlaying:', showInfo.isPlaying);
+};
+
+webview.addEventListener('click', (event) => {
+	const eventPath = event.composedPath && event.composedPath() || [];
+	const playPauseClicked = eventPath.find(path => path === webview.querySelector(DomHooks.playbutton));
 
 	if (playPauseClicked) {
-		console.log(playPauseClicked);
+		checkPlayingState();
 
-		const paused = playPauseClicked.getAttribute('aria-label') === 'Pause';
-		is_playing = !paused;
-		console.log('Paused', paused);
+		const trackElement = webview.querySelector(DomHooks.showname);
+		showInfo.showName = trackElement ? trackElement.innerText : '';
 
-		const trackElement = webview.querySelector(DomHooks.showtitle);
-		let track = trackElement ? trackElement.innerText : '';
-
-		console.log(track);
-		ipcRenderer.send(paused ? 'handlePause' : 'handlePlay', track);
+		console.log('showName:', showInfo.showName);
+		ipcRenderer.send('displayNotification', showInfo);
 	}
 });

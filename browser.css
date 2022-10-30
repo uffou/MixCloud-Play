@@ -24,22 +24,3 @@ div[class^="Header__HeaderSection"] a:focus-visible { /* Electron focuses the fi
 span[class^="PlayButton__PlayButtonIcon"] { /* Play button - moving up */
 	line-height: 1;
 }
-
-#notify {
-	display: none;
-	position: absolute;
-	top: 0;
-	right: 0;
-	width: 360px;
-	padding: 10px;
-	border-radius: 5px;
-	border-top-right-radius: 0;
-	background: #333;
-	color: white;
-	font-family: monospace;
-	font-weight: bold;
-	line-height: 1;
-}
-.DEBUG #notify {
-	display: block;
-}
