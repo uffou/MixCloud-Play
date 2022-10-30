@@ -193,6 +193,8 @@ app.on('ready', () => {
 	// Originally copied from https://gist.github.com/twolfson/0a03820e27583cc9ad6e
 	// Docs: https://www.electronjs.org/docs/api/global-shortcut
 	// Electron and launching app (Terminal or VSCode) need to be approved: https://developer.apple.com/library/archive/documentation/Accessibility/Conceptual/AccessibilityMacOSX/OSXAXTestingApps.html
+
+	// NOTE: I've never seen this register on macOS (likely as it won't if the keys are already registered by another app - which the OS does already ?!?)
 	var registered = globalShortcut.register('MediaNextTrack', () => {
 		console.log('MediaNextTrack pressed');
 		page.send('seek');
@@ -238,88 +240,39 @@ app.on('will-quit', () => {
 	globalShortcut.unregisterAll();
 });
 
-ipcMain.on('notification', (_event, notificationIndex, subtitle) => {
-	if (win.isFocused()) return;
+ipcMain.on('displayNotification', (_, showInfo) => {
+	let pauseSymbol = '||'; // kind of looks like a "pause" symbol';
+	let pauseText = ' (paused)';
+	let title = showInfo.showName;
+	let subtitle = 'Show Paused';
+	let timeout = 7000;
 
-	// app.dock.setBadge("!");
+	if (showInfo.isPlaying) {
+		pauseSymbol = '';
+		pauseText = '';
+		subtitle = showInfo.trackArtist;
+		timeout = 15000;
+	}
 
-	const notification = new Notification({
-		title: 'Mixcloud Play',
-		subtitle,
-		silent: true
-	});
-	notification.on('click', (e) => {
-		console.log('notificationClicked - click', e);
-		page.send('notificationClicked', e);
-		win.show();
-	});
-	notification.show();
-	setTimeout(() => {
-		notification.close();
-	}, 7000);
-});
+	app.dock.setBadge(pauseSymbol);
 
-ipcMain.on('handlePause', (_, track) => {
-	app.dock.setBadge('||'); // kind of looks like a "pause" symbol
-
-	tray.setTitle(track + ' (paused)');
-
-	page.send('notify', track);
-	const notification = new Notification({
-		title: 'Show Paused',
-		subtitle: track,
-		silent: true
-	});
-	notification.on('click', (e) => {
-		console.log('notificationClicked - pause', e);
-		page.send('notificationClicked', e);
-		win.show();
-	});
-	notification.show();
-	setTimeout(() => {
-		notification.close();
-	}, 7000);
-});
-
-ipcMain.on('nowPlaying', (_, title, subtitle) => {
-	console.log(`${title} ${subtitle}`);
-	app.dock.setBadge('');
+	tray.setTitle(' ' + title + pauseText);
 
 	const notification = new Notification({
 		title: title,
 		subtitle: subtitle,
 		silent: true
 	});
-	notification.on('click', (e) => {
-		console.log('notificationClicked - nowPlaying', e);
-		page.send('notificationClicked', e);
+
+	notification.on('click', () => {
 		win.show();
 	});
+
 	notification.show();
+
 	setTimeout(() => {
 		notification.close();
-	}, 15000);
-});
-
-ipcMain.on('handlePlay', (_, track) => {
-	app.dock.setBadge('');
-
-	tray.setTitle(track);
-
-	const notification = new Notification({
-		title: 'Playing...',
-		subtitle: track,
-		silent: true
-	});
-	notification.on('click', (e) => {
-		console.log('notificationClicked - handlePlay', e);
-		page.send('notificationClicked', e);
-		win.show();
-	});
-	notification.show();
-	setTimeout(() => {
-		notification.close();
-	}, 7000);
+	}, timeout);
 });
 
 function togglePlay() {
