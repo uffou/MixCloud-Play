@@ -97,76 +97,93 @@ ipcRenderer.on('back', () => {
 		el_back.click();
 });
 
+const customLoop = () => {
+	console.log('showInfo:', showInfo);
+
+	// Check if the play state has changed (normally by media keys (as we only have events for the Mixcloud play button))
+	const current_state = showInfo.isPlaying;
+
+	checkPlayingState();
+
+	if (current_state !== showInfo.isPlaying) {
+		ipcRenderer.send('displayNotification', showInfo);
+		return;
+	}
+
+	if (showInfo.isPlaying) {
+		// get the show name
+		const nameElement = webview.querySelector(DomHooks.showname);
+		if (!nameElement) return;
+
+		let name = nameElement.innerText;
+		name = String(name);
+
+		if (name !== showInfo.showName) {
+			console.log('New Show:', name);
+			showInfo.showName = name;
+
+			if (name !== '')
+				ipcRenderer.send('displayNotification', showInfo);
+		}
+
+		// get track artist and clean
+		let artistElement = webview.querySelector(DomHooks.trackartist);
+		if (!artistElement) return;
+
+		let artist = artistElement.innerText;
+		artist = String(artist);
+		artist = artist.replace(/[\u2014\u002d]\sbuy$/gi, '');
+		artist = artist.replace(/(by )/, '');
+
+		if (artist !== showInfo.trackArtist) {
+			console.log('New Artist:', artist);
+			showInfo.trackArtist = artist;
+		}
+
+		// get track title
+		const titleElement = webview.querySelector(DomHooks.tracktitle);
+		if (!titleElement) return; // element doesn't exist if the show doesn't have a tracklist
+
+		let title = titleElement.innerText;
+		title = String(title);
+
+		if (title !== showInfo.trackTitle) {
+			console.log('New Track:', title);
+			showInfo.trackTitle = title;
+
+			if (title !== '')
+				ipcRenderer.send('displayNotification', showInfo);
+		}
+	} else {
+		// Login form prefill
+		// login will only show when not playing (so reduce checks/lookups)
+		let loginform = webview.querySelector(DomHooks.loginform);
+
+		if (!loginform || loginform.dataset.listened) return; // only attach an event to the form once
+		loginform.dataset.listened = true;
+
+		console.log('login showing');
+		keyStore.Login(loginform); // try using saved login
+
+		// add a listener to the form to capture login details and store them
+		const loginbutton = loginform.querySelector(DomHooks.loginbutton);
+
+		loginbutton.addEventListener('click', async() => {
+			let username = loginform.querySelector(DomHooks.usernameinput).value;
+			let password = loginform.querySelector(DomHooks.passwordinput).value;
+
+			if (username && password) {
+				// delete any exiting logins
+				await keyStore.DeleteKeys();
+				// store the users details for auto-login next time
+				await keyStore.AddKey(username, password);
+			}
+		});
+	}
+};
+
 webview.addEventListener('DOMContentLoaded', () => {
-	setInterval(() => {
-		console.log('showInfo:', showInfo);
-
-		// Check if the play state has changed (normally by media keys (as we only have events for the Mixcloud play button))
-		const current_state = showInfo.isPlaying;
-
-		checkPlayingState();
-
-		if (current_state !== showInfo.isPlaying) {
-			ipcRenderer.send('displayNotification', showInfo);
-			return;
-		}
-
-		if (showInfo.isPlaying) {
-			// get track artist and clean
-			let artistElement = webview.querySelector(DomHooks.trackartist);
-			if (!artistElement) return;
-
-			let artist = artistElement.innerText;
-			artist = String(artist);
-			artist = artist.replace(/[\u2014\u002d]\sbuy$/gi, '');
-			artist = artist.replace(/(by )/, '');
-
-			if (artist !== showInfo.trackArtist) {
-				showInfo.trackArtist = artist;
-				console.log('New Artist:', artist);
-			}
-
-			// get track title and clean
-			const titleElement = webview.querySelector(DomHooks.tracktitle);
-			if (!titleElement) return; // element doesn't exist if the show doesn't have a tracklist
-
-			let title = titleElement.innerText;
-			title = String(title);
-
-			if (title !== showInfo.trackTitle) {
-				console.log('New Track:', title);
-				showInfo.trackTitle = title;
-
-				if (title !== '')
-					ipcRenderer.send('displayNotification', showInfo);
-			}
-		} else {
-			// Login form prefill
-			// login will only show when not playing (so reduce checks/lookups)
-			let loginform = webview.querySelector(DomHooks.loginform);
-
-			if (!loginform || loginform.dataset.listened) return; // only attach an event to the form once
-			loginform.dataset.listened = true;
-
-			console.log('login showing');
-			keyStore.Login(loginform); // try using saved login
-
-			// add a listener to the form to capture login details and store them
-			const loginbutton = loginform.querySelector(DomHooks.loginbutton);
-
-			loginbutton.addEventListener('click', async() => {
-				let username = loginform.querySelector(DomHooks.usernameinput).value;
-				let password = loginform.querySelector(DomHooks.passwordinput).value;
-
-				if (username && password) {
-					// delete any exiting logins
-					await keyStore.DeleteKeys();
-					// store the users details for auto-login next time
-					await keyStore.AddKey(username, password);
-				}
-			});
-		}
-	}, 2000);
+	setInterval(() => customLoop(), 2000);
 });
 
 const checkPlayingState = () => {
@@ -175,7 +192,6 @@ const checkPlayingState = () => {
 
 	const button_aria = playPauseButton.getAttribute('aria-label') === 'Pause'; // when it's paused, the aria-label is 'Play'
 	showInfo.isPlaying = button_aria; // set global var
-	console.log('isPlaying:', showInfo.isPlaying);
 };
 
 webview.addEventListener('click', (event) => {
@@ -183,12 +199,7 @@ webview.addEventListener('click', (event) => {
 	const playPauseClicked = eventPath.find(path => path === webview.querySelector(DomHooks.playbutton));
 
 	if (playPauseClicked) {
-		checkPlayingState();
-
-		const trackElement = webview.querySelector(DomHooks.showname);
-		showInfo.showName = trackElement ? trackElement.innerText : '';
-
-		console.log('showName:', showInfo.showName);
+		customLoop();
 		ipcRenderer.send('displayNotification', showInfo);
 	}
 });

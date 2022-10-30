@@ -222,7 +222,7 @@ app.on('ready', () => {
 
 	win.on('close', () => {
 		// Unregister all shortcuts
-		console.log('Unregistering all shortcuts');
+		console.log('Deregistering all shortcuts');
 		globalShortcut.unregisterAll();
 		app.exit(); // Quit the app - even with sound playing (otherwise Electron won't quite, see #89)
 	});
