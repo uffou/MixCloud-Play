@@ -5,48 +5,22 @@ input::selection,
 textarea::selection {
 	background-color: #643e9b57;
 }
-.ad-header-wrapper,
 div[class^="Warnings__Container"],
-div[class^="Header__"]::before,
-.sidebar-small,
-.profile-new-design-header {
+div[class^="Header__"] {
 	-webkit-app-region: drag;
 }
 input,
 textarea {
 	-webkit-app-region: no-drag !important;
 }
-.kZfKuO { /* Mixcloud Logo */
+div[class^="Header__HeaderSection"] { /* Mixcloud Logo */
 	padding-left: 60px !important;
 }
-.container-wide .sidebar-small nav {
-	padding-left: 70px !important;
-}
-.sidebar-small.fix-to-top nav a {
-	padding-top: 1px !important;
-	padding-bottom: 1px !important;
+div[class^="Header__HeaderSection"] a:focus-visible { /* Electron focuses the first link, and Mixcloud shows an ugly outline */
+	outline: 0;
 }
 
 /* Temp Fix */
-.dvRTvd { /* Play button - moving up */
+span[class^="PlayButton__PlayButtonIcon"] { /* Play button - moving up */
 	line-height: 1;
-}
-
-#notify {
-	display: none;
-	position: absolute;
-	top: 0;
-	right: 0;
-	width: 360px;
-	padding: 10px;
-	border-radius: 5px;
-	border-top-right-radius: 0;
-	background: #333;
-	color: white;
-	font-family: monospace;
-	font-weight: bold;
-	line-height: 1;
-}
-.DEBUG #notify {
-	display: block;
 }

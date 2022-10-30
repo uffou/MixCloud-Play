@@ -26,14 +26,11 @@ if (DEBUG)
 
 let win = null;
 let page;
-let isQuitting = false;
 
 let tray = null;
 let trayContextMenu = null;
-var _isPlaying = false;
 
 const isRunning = app.requestSingleInstanceLock();
-app.allowRendererProcessReuse = true;
 app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
 
 if (!isRunning) {
@@ -94,7 +91,11 @@ function isURLAllowed(url) {
 }
 
 app.on('activate', () => { win.show() });
-app.on('before-quit', () => isQuitting = true);
+
+app.on('before-quit', () => {
+	// save window size and position
+	config.set('winBounds', win.getBounds());
+});
 
 app.on('ready', () => {
 	initTray();
@@ -170,21 +171,6 @@ app.on('ready', () => {
 		win.show();
 	});
 
-	win.on('close', (e) => {
-		if (!isQuitting) {
-			e.preventDefault();
-
-			if (process.platform === 'darwin') {
-				app.hide();
-			} else {
-				win.hide();
-			}
-		} else {
-			// save window size and position
-			config.set('winBounds', win.getBounds());
-		}
-	});
-
 	// mainWindow.on('focus', () => {
 	//     // app.dock.setBadge('');
 	// });
@@ -193,6 +179,8 @@ app.on('ready', () => {
 	// Originally copied from https://gist.github.com/twolfson/0a03820e27583cc9ad6e
 	// Docs: https://www.electronjs.org/docs/api/global-shortcut
 	// Electron and launching app (Terminal or VSCode) need to be approved: https://developer.apple.com/library/archive/documentation/Accessibility/Conceptual/AccessibilityMacOSX/OSXAXTestingApps.html
+
+	// NOTE: I've never seen this register on macOS (likely as it won't if the keys are already registered by another app - which the OS does already ?!?)
 	var registered = globalShortcut.register('MediaNextTrack', () => {
 		console.log('MediaNextTrack pressed');
 		page.send('seek');
@@ -204,7 +192,7 @@ app.on('ready', () => {
 	}
 
 	registered = globalShortcut.register('MediaPlayPause', () => {
-		console.log('MediaPlayPause pressed', _isPlaying);
+		console.log('MediaPlayPause pressed');
 		togglePlay();
 	});
 	if (!registered) {
@@ -231,100 +219,50 @@ app.on('ready', () => {
 	} else {
 		console.log('MediaStop registration bound!');
 	}
+
+	win.on('close', () => {
+		// Unregister all shortcuts
+		console.log('Deregistering all shortcuts');
+		globalShortcut.unregisterAll();
+		app.exit(); // Quit the app - even with sound playing (otherwise Electron won't quite, see #89)
+	});
 });
 
-app.on('will-quit', () => {
-	// Unregister all shortcuts
-	globalShortcut.unregisterAll();
-});
+ipcMain.on('displayNotification', (_, showInfo) => {
+	let pauseSymbol = '||'; // kind of looks like a "pause" symbol';
+	let pauseText = ' (paused)';
+	let title = showInfo.showName;
+	let subtitle = 'Show Paused';
+	let timeout = 7000;
 
-ipcMain.on('notification', (_event, notificationIndex, subtitle) => {
-	if (win.isFocused()) return;
+	if (showInfo.isPlaying) {
+		pauseSymbol = '';
+		pauseText = '';
+		subtitle = showInfo.trackArtist;
+		timeout = 15000;
+	}
 
-	// app.dock.setBadge("!");
+	app.dock.setBadge(pauseSymbol);
 
-	const notification = new Notification({
-		title: 'Mixcloud Play',
-		subtitle,
-		silent: true
-	});
-	notification.on('click', (e) => {
-		console.log('notificationClicked - click', e);
-		page.send('notificationClicked', e);
-		win.show();
-	});
-	notification.show();
-	setTimeout(() => {
-		notification.close();
-	}, 7000);
-});
-
-ipcMain.on('handlePause', (_, track) => {
-	app.dock.setBadge('||'); // kind of looks like a "pause" symbol
-
-	tray.setTitle(track + ' (paused)');
-
-	page.send('notify', track);
-	const notification = new Notification({
-		title: 'Show Paused',
-		subtitle: track,
-		silent: true
-	});
-	notification.on('click', (e) => {
-		console.log('notificationClicked - pause', e);
-		page.send('notificationClicked', e);
-		win.show();
-	});
-	notification.show();
-	setTimeout(() => {
-		notification.close();
-	}, 7000);
-});
-
-ipcMain.on('nowPlaying', (_, title, subtitle) => {
-	console.log(`${title} ${subtitle}`);
-	app.dock.setBadge('');
+	tray.setTitle(' ' + title + pauseText);
 
 	const notification = new Notification({
 		title: title,
 		subtitle: subtitle,
 		silent: true
 	});
-	notification.on('click', (e) => {
-		console.log('notificationClicked - nowPlaying', e);
-		page.send('notificationClicked', e);
+
+	notification.on('click', () => {
 		win.show();
 	});
+
 	notification.show();
+
 	setTimeout(() => {
 		notification.close();
-	}, 15000);
-});
-
-ipcMain.on('handlePlay', (_, track) => {
-	app.dock.setBadge('');
-
-	tray.setTitle(track);
-
-	const notification = new Notification({
-		title: 'Playing...',
-		subtitle: track,
-		silent: true
-	});
-	notification.on('click', (e) => {
-		console.log('notificationClicked - handlePlay', e);
-		page.send('notificationClicked', e);
-		win.show();
-	});
-	notification.show();
-	setTimeout(() => {
-		notification.close();
-	}, 7000);
+	}, timeout);
 });
 
 function togglePlay() {
-	_isPlaying = !_isPlaying;
-	page.send('playPause');
-	console.log('Toggle Play:', _isPlaying);
-	return _isPlaying;
+	page.send('triggerPlayPause');
 }
