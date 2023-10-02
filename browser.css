@@ -9,8 +9,13 @@ div[class^="Warnings__Container"],
 div[class^="Header__"] {
 	-webkit-app-region: drag;
 }
+a,
 input,
-textarea {
+textarea,
+select,
+button,
+img,
+svg {
 	-webkit-app-region: no-drag !important;
 }
 div[class^="Header__HeaderSection"] { /* Mixcloud Logo */
