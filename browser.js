@@ -29,11 +29,11 @@ const showInfo = {
 // The web-scrobbler project can help with these selectors when MixCloud change the DOM
 // https://github.com/web-scrobbler/web-scrobbler/blob/master/src/connectors/mixcloud.js
 const DomHooks = {
-	playbutton: '[class*=PlayButton__PlayerControl]',
+	playbutton: '[class^=PlayButton__PlayerControl]',
 	seekbutton: '[aria-label="Seek forwards"]',
 	backbutton: '[aria-label="Seek backwards"]',
-	showname: '[class*=PlayerControls__ShowTitle]',
-	showowner: '[class*=PlayerControls__ShowOwnerName]',
+	showname: '[class*=PlayerControlsDetails__ShowTitle]',
+	showowner: '[class*=PlayerQueueItem__ShowOwner]',
 	tracktitle: '[class*=PlayerSliderComponent__Track-]',
 	trackartist: '[class*=PlayerSliderComponent__Artist]',
 	loginform: 'form[name=login]',

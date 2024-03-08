@@ -2,9 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
-
-## Unreleased
+## 0.21.0 - 📦 Package Dependency Updates Again
 
 ### Added
 
@@ -20,7 +18,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Fixed
 
 - Drag area in the header
-- paddding to the Mixcloud logo so it's not under the window controls
+- Paddding to the Mixcloud logo so it's not under the window controls
+- Track info collection and track changes checking
+
+Release Track: 🎵 <https://www.mixcloud.com/Professor_Eddy/billboard-hot-soul-singles-november-17th-1979/>
 
 ## 0.20.0 - 📦 Package Dependency Updates
 
