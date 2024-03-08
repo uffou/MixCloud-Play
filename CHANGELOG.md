@@ -17,6 +17,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Update dependency `electron-updater` from v6.1.4 to **v6.1.8**
 - Update dependency `electron-store` from v8.1.0 to **v8.2.0**
 
+### Fixed
+
+- Drag area in the header
+- paddding to the Mixcloud logo so it's not under the window controls
+
 ## 0.20.0 - 📦 Package Dependency Updates
 
 ### Changed
