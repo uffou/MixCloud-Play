@@ -10,6 +10,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - CHANGELOG.md file
 
+### Changed
+
+- Update dependency `electron` from v26.2.4 to **v29.1.1**
+- Update dependency `electron-builder` from v24.6.4 to **v24.13.3**
+- Update dependency `electron-updater` from v6.1.4 to **v6.1.8**
+- Update dependency `electron-store` from v8.1.0 to **v8.2.0**
+
 ## 0.20.0 - 📦 Package Dependency Updates
 
 ### Changed
