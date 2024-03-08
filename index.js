@@ -238,7 +238,7 @@ ipcMain.on('displayNotification', (_, showInfo) => {
 	if (showInfo.isPlaying) {
 		pauseSymbol = '';
 		pauseText = '';
-		subtitle = showInfo.trackArtist;
+		subtitle = `${showInfo.trackTitle} by ${showInfo.trackArtist}`;
 		timeout = 15000;
 	}
 
