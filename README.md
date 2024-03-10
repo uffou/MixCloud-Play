@@ -1,22 +1,82 @@
-MixCloud Play
-=====
-MixCloud Play is the missing desktop experience for MixCloud.com with support for media controls and showing current track in menu bar. Enjoy listening your favorite music for hours...
+# Mixcloud Play
 
-## [Download for Mac](https://github.com/uffou/MixCloud-Play/releases/download/v0.9.1/MixCloud.Play.app.zip)
+> Application wrapper for Mixcloud
 
-![screenshot](https://raw.githubusercontent.com/uffou/MixCloud-Play/master/Screenshot.png)
+Mixcloud Play is the missing desktop experience for [Mixcloud.com](https://www.mixcloud.com/) with support for media controls and showing current track in menu bar. Enjoy listening to hours of new music...
+
+## [Download for Mac](https://github.com/mountainash/Mixcloud-Play/releases/latest)
+
+[![screenshot](https://raw.githubusercontent.com/mountainash/Mixcloud-Play/master/Screenshot.jpg)](https://github.com/mountainash/Mixcloud-Play/releases/latest)
 
 ## Features
-1. Media controls - play/pause, next
-2. Menu bar track title
-3. Song Notifications
-3. Modern desktop look
 
-Feature requests are welcome!
+1. Media Controls: ⏪ ⏯️ ⏩ (⏪ [requires Mixcloud _PREMIUM_ or _SELECT_](https://help.mixcloud.com/hc/en-us/articles/360004054059))
+2. Menu Bar track title
+3. Song info in OS Notifications
+4. Stores login in local keystore/keychain
+5. Last.fm [Scrobbing](https://www.last.fm/about/trackmymusic) ([_coming soon_](https://github.com/mountainash/Mixcloud-Play/projects/1))
 
-## Getting started
+## Enable Media Controls
+
+To allow the media key events to be passed through to the app on macOS:
+
+1. open **System Preferences**
+2. open **Security & Privacy**
+3. scroll down and select **Accessibility**
+4. Use `+` or drag&drop in the **Mixcloud Play.app**
+
+Open the app and try using the media keys.
+
+## Development
+
+### Building
+
+```sh
+npm install
+npm run build
 ```
-yarn
-yarn watch
-yarn start
+
+OR
+
+```sh
+npm run start
 ```
+
+Use the compile macOS .app with Chromium Dev Tools and some extra debugging enabled:
+
+```sh
+npm run build:debug
+```
+
+### Docker Compose
+
+```sh
+docker-compose build
+docker-compose run --rm mixcloud-play {any command here}
+```
+
+Built app will output to `./dist/mac/Mixcloud Play.app`
+
+### Auto Update Publishing (Github)
+
+Publish app updates is set-up as per the [GithubOptions](https://www.electron.build/configuration/publish#githuboptions) for Electron Builds [Auto Update](https://www.electron.build/auto-update).
+
+1. Update the app version number in both `package*.json` files.
+
+```sh
+export GH_TOKEN={token_with_repo_scope}
+npm run publish
+```
+
+A release in the specified GitHub repo should be drafted and ready for release.
+
+### Development Tips
+
+#### Asar Extraction
+
+Linking/locating files inside the build can be hard to know what's going on inside the `app.asar` (inside Electron). Us the following commands to extract the contents of the .asar.
+
+1. Build the app fist `docker-compose run --rm mixcloud-play`
+1. `docker run --rm -it -v $(pwd):/project electronuserland/builder:14-05.21` to enter bash inside the container
+1. `npm install -g asar`
+1. `asar extract dist/mac/Mixcloud\ Play.app/Contents/Resources/app.asar app_contents` will extract the MacOS "dist" contents to `/app_contents/`

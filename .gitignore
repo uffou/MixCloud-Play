@@ -1,3 +1,6 @@
+.env
+Screenshot.pxd
 node_modules/
 dist/
 build/
+*app_contents/

@@ -1,55 +1,85 @@
 {
-  "name": "MixCloud-Play",
-  "version": "0.9.1",
-  "description": "The desktop client MixCloud",
-  "author": {
-    "name": "Codemotion Ltd."
-  },
-  "license": "UNLICENSED",
-  "scripts": {
-    "start": "electron .",
-    "build": "rimraf build && webpack-cli --mode=production",
-    "watch": "rimraf build && webpack-cli --mode=development --watch",
-    "dist": "yarn build && build -m"
-  },
-  "build": {
-    "files": [
-      "build"
-    ],
-    "appId": "com.codemotionapps.mixcloud",
-    "copyright": "Copyright © 2019 Codemotion Ltd.",
-    "productName": "MixCloud Play",
-    "mac": {
-      "icon": "MixCloud.icns",
-      "target": [
-        "dmg"
-      ]
-    }
-  },
-  "main": "build/main.js",
-  "devDependencies": {
-    "@babel/core": "^7.0.0-rc.3",
-    "@babel/plugin-proposal-class-properties": "^7.0.0-rc.3",
-    "@babel/plugin-proposal-decorators": "^7.0.0-rc.3",
-    "@babel/plugin-proposal-function-bind": "^7.0.0-rc.3",
-    "@babel/preset-env": "^7.0.0-rc.3",
-    "@babel/preset-react": "^7.0.0-rc.3",
-    "babel-loader": "^8.0.0-beta.6",
-    "copy-webpack-plugin": "^4.5.2",
-    "electron": "2.0.8",
-    "electron-builder": "20.28.2",
-    "electron-ipc-log": "^3.0.1",
-    "mobx": "5.0.5",
-    "mobx-react": "5.2.5",
-    "react": "16.4.2",
-    "react-dom": "16.4.2",
-    "rimraf": "^2.6.2",
-    "webpack": "^4.17.1",
-    "webpack-cli": "^3.1.0"
-  },
-  "dependencies": {
-    "@codemotion/electron-google-analytics": "^0.0.1",
-    "electron-context-menu": "0.10.0",
-    "electron-store": "2.0.0"
-  }
+	"name": "mixcloud-play",
+	"productName": "Mixcloud Play",
+	"version": "0.21.0",
+	"description": "The Mixcloud desktop client",
+	"keywords": [
+		"music",
+		"osx",
+		"macOS",
+		"mixcloud",
+		"wrapper",
+		"media keys",
+		"notifications",
+		"electron"
+	],
+	"author": {
+		"name": "Codemotion Ltd."
+	},
+	"contributors": [
+		{
+			"name": "Mountain/\\Ash"
+		},
+		{
+			"name": "Mihail Melnic"
+		}
+	],
+	"repository": {
+		"type": "git",
+		"url": "git@github.com:mountainash/Mixcloud-Play.git"
+	},
+	"homepage": "https://github.com/mountainash/Mixcloud-Play",
+	"bugs": {
+		"url": "https://github.com/mountainash/Mixcloud-Play/issues"
+	},
+	"license": "UNLICENSED",
+	"scripts": {
+		"start": "electron .",
+		"start:debug": "ELECTRON_DEBUG=true npm run start",
+		"build": "electron-builder",
+		"build:dir": "electron-builder --mac --dir",
+		"build:debug": "ELECTRON_DEBUG=true npm run build:dir",
+		"publish": "electron-builder build --publish always"
+	},
+	"dependencies": {
+		"electron-context-menu": "3.6.1",
+		"electron-store": "8.2.0",
+		"electron-updater": "6.1.8",
+		"keytar": "7.9.0",
+		"notie": "4.3.1"
+	},
+	"devDependencies": {
+		"electron": "29.1.1",
+		"electron-builder": "24.13.3"
+	},
+	"build": {
+		"appId": "BSFV28T84F.com.mountainash.${name}",
+		"copyright": "Copyleft 2022",
+		"productName": "Mixcloud Play",
+		"forceCodeSigning": true,
+		"removePackageKeywords": false,
+		"mac": {
+			"category": "public.app-category.music",
+			"icon": "Mixcloud.icns",
+			"target": {
+				"target": "default",
+				"arch": [
+					"x64",
+					"arm64"
+				]
+			}
+		},
+		"publish": [
+			{
+				"provider": "github",
+				"owner": "mountainash",
+				"repo": "Mixcloud-Play"
+			}
+		]
+	},
+	"renovate": {
+		"extends": [
+			"config:base"
+		]
+	}
 }

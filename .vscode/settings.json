@@ -1,3 +1,21 @@
 {
-	"javascript.validate.enable": false
+	"javascript.validate.enable": true,
+	"workbench.colorCustomizations": {
+		"activityBar.background": "#1e2337",
+		"activityBar.activeBackground": "#5937b3",
+		"activityBar.activeBorder": "#5937b3",
+		"activityBar.foreground": "#f3b2a6",
+		"activityBar.inactiveForeground": "#f3b2a6",
+		"activityBarBadge.background": "#5937b3",
+		"activityBarBadge.foreground": "#f3b2a6",
+		"titleBar.activeBackground": "#1e2337",
+		"titleBar.inactiveBackground": "#636674",
+		"titleBar.activeForeground": "#f3b2a6",
+		"titleBar.inactiveForeground": "#e7e7e7",
+		"statusBar.background": "#1e2337",
+		"statusBarItem.hoverBackground": "#5937b3",
+		"statusBar.foreground": "#f3b2a6",
+		"statusBar.border": "#586573",
+		"titleBar.border": "#586573"
+	}
 }

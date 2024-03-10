@@ -1,0 +1,26 @@
+::selection {
+	background-color: transparent;
+}
+input::selection,
+textarea::selection {
+	background-color: #643e9b57;
+}
+div[class^="Warnings__Container"],
+div[class^="styles__HeaderContainer"] {
+	-webkit-app-region: drag;
+}
+a,
+input,
+textarea,
+select,
+button,
+img,
+svg {
+	-webkit-app-region: no-drag !important;
+}
+div[class^="styles__HeaderContainer"] { /* Mixcloud Logo */
+	padding-left: 90px !important;
+}
+div[class^="styles__HeaderSection"] a:focus-visible { /* Electron focuses the first link, and Mixcloud shows an ugly outline */
+	outline: 0;
+}
